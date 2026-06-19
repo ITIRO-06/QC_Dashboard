@@ -867,6 +867,28 @@
       color: #38bdf8;
       font-weight: 600;
     }
+
+    /* Сертификация (Приёмка) */
+    .acc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 15px; }
+    .acc-card { background: rgba(30, 41, 59, 0.4); border: 1px solid #334155; border-radius: 6px; padding: 15px; }
+    .acc-header { display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px dashed #334155; padding-bottom: 10px; }
+    .acc-title { font-weight: 700; color: #f8fafc; font-size: 15px; }
+    .company-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(51, 65, 85, 0.3); }
+    .company-row:last-child { border-bottom: none; }
+    .comp-name { font-size: 13px; font-weight: 600; color: #94a3b8; width: 80px; }
+    .comp-actions { display: flex; gap: 8px; align-items: center; }
+    .btn-approve { background: transparent; border: 1px solid #10b981; color: #10b981; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; transition: 0.2s; }
+    .btn-approve:hover:not(:disabled) { background: #10b981; color: #fff; }
+    .btn-approve.active { background: #10b981; color: #fff; }
+    .btn-approve:disabled { opacity: 0.3; cursor: not-allowed; border-color: #64748b; color: #64748b; }
+    
+    .btn-remark { background: transparent; border: 1px solid #f59e0b; color: #f59e0b; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; transition: 0.2s; }
+    .btn-remark:hover:not(:disabled) { background: #f59e0b; color: #fff; }
+    .btn-remark.has-remark { background: rgba(245, 158, 11, 0.2); }
+    .btn-remark:disabled { opacity: 0.3; cursor: not-allowed; border-color: #64748b; color: #64748b; }
+
+    #remarkModal textarea { width: 100%; background: #0f172a; border: 1px solid #334155; color: #f8fafc; padding: 10px; border-radius: 6px; resize: vertical; min-height: 80px; margin-top: 10px; font-family: inherit;}
+    .remark-history { background: #0f172a; padding: 10px; border-radius: 6px; font-size: 12px; color: #cbd5e1; max-height: 150px; overflow-y: auto; white-space: pre-wrap; margin-bottom: 10px; border: 1px solid #1e293b; }
   </style>
 </head>
 
@@ -938,6 +960,7 @@
       <div class="nav-tab active" onclick="switchTab('analytics', event)" data-i18n="tab_analytics">АНАЛИТИКА</div>
       <div class="nav-tab" onclick="switchTab('map', event)" data-i18n="tab_map">КАРТА ПРОЕКТА</div>
       <div class="nav-tab" onclick="switchTab('details', event)" data-i18n="tab_details">ОБЪЕКТЫ (ЗАХВАТКИ)</div>
+      <div class="nav-tab" onclick="switchTab('acceptance', event)" data-i18n="tab_acceptance">ПРИЁМКА</div>
     </div>
 
     <div class="content">
@@ -1040,6 +1063,11 @@
         <div class="grid-container" id="segments-grid"></div>
       </div>
 
+      <!-- Приемка -->
+      <div id="acceptance" class="page">
+         <div class="acc-grid" id="acc-grid-container"></div>
+      </div>
+
       <div id="profile" class="page">
         <div
           style="max-width: 500px; margin: 0 auto; background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(10px); border-radius: 8px; border: 1px solid #334155; padding: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.3);">
@@ -1106,6 +1134,23 @@
         <button class="modal-close" onclick="closeModal()">×</button>
       </div>
       <div class="modal-body" id="modal-body"></div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="remarkModal" onclick="closeRemarkModal(event)">
+    <div class="modal-box" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h2 data-i18n="remark_title">Замечания по каркасу</h2>
+        <button class="modal-close" onclick="closeRemarkModal()">×</button>
+      </div>
+      <div class="modal-body">
+         <div id="remark-history-container" style="display:none;">
+            <div style="font-size: 11px; color: #94a3b8; margin-bottom: 5px; text-transform: uppercase;" data-i18n="remark_history">История замечаний:</div>
+            <div class="remark-history" id="remark-history-text"></div>
+         </div>
+         <textarea id="new-remark-text" placeholder="Введите текст замечания или ответа..."></textarea>
+         <button class="login-btn" style="margin-top: 15px;" onclick="submitRemark()" id="submitRemarkBtn" data-i18n="remark_submit">Отправить</button>
+      </div>
     </div>
   </div>
 
@@ -1315,6 +1360,9 @@
         chart_status: "Распределение статусов", chart_type: "Номенклатура",
         legend_red: "Не прошёл входной контроль", legend_orange: "В процессе сдачи", legend_blue: "Готов к погружению", legend_green: "Завершён", legend_gray: "В плане / Нет данных",
         legend_gray_cage: "Ожидается поставка",
+        tab_acceptance: "ПРИЁМКА", acc_approve: "ПРИНЯТО", acc_remark: "ЗАМЕЧАНИЯ",
+        remark_title: "Замечания по каркасу", remark_history: "История замечаний:", remark_submit: "Отправить",
+        acc_empty: "Нет активных каркасов на этапах Контроль/Сдача",
         stage_names: ["Входной контроль", "Сдача", "Ожидание", "Погружение"],
         vol: "КАРКАСОВ:", time_spent: "Затрачено времени", current_stage: "Теку этап",
         sync: "Синхронизация...", sync_ok: "SYNC:", sync_err: "СБОЙ СВЯЗИ", no_url: "ОШИБКА: НЕТ URL",
@@ -1330,6 +1378,9 @@
         chart_status: "Status Distribution", chart_type: "Nomenclature",
         legend_red: "Failed/Awaiting Inspection", legend_orange: "Handover in Progress", legend_blue: "Ready for Submersion", legend_green: "Completed", legend_gray: "Planned / No data",
         legend_gray_cage: "Delivery expected",
+        tab_acceptance: "ACCEPTANCE", acc_approve: "APPROVED", acc_remark: "REMARKS",
+        remark_title: "Cage Remarks", remark_history: "Remark History:", remark_submit: "Submit",
+        acc_empty: "No active cages in inspection/handover stages",
         stage_names: ["Inspection", "Handover", "Awaiting", "Submersion"],
         vol: "VOL:", time_spent: "Time spent", current_stage: "Current stage",
         sync: "Syncing...", sync_ok: "SYNC:", sync_err: "CONNECTION ERROR", no_url: "ERROR: NO URL",
@@ -1345,6 +1396,9 @@
         chart_status: "Durum Dağılımı", chart_type: "İsimlendirme",
         legend_red: "Kontrol Bekliyor/Başarısız", legend_orange: "Teslim Sürecinde", legend_blue: "Daldırmaya Hazır", legend_green: "Tamamlandı", legend_gray: "Planlanmış / Veri yok",
         legend_gray_cage: "Teslimat bekleniyor",
+        tab_acceptance: "KABUL", acc_approve: "ONAYLANDI", acc_remark: "AÇIKLAMALAR",
+        remark_title: "Kafes Açıklamaları", remark_history: "Açıklama Geçmişi:", remark_submit: "Gönder",
+        acc_empty: "Kontrol/teslim aşamasında aktif kafes yok",
         stage_names: ["Kontrol", "Teslim", "Bekleme", "Daldırma"],
         vol: "HACİM:", time_spent: "Geçen süre", current_stage: "Mevcut aşama",
         sync: "Senkronize ediliyor...", sync_ok: "SYNC:", sync_err: "BAĞLANTI HATASI", no_url: "HATA: URL YOK",
@@ -1621,6 +1675,150 @@
       });
     }
 
+    let currentRemarkCage = null;
+
+    function renderAcceptancePage() {
+      const container = document.getElementById('acc-grid-container');
+      if (!container) return;
+      container.innerHTML = '';
+      
+      const userCompany = sessionStorage.getItem('authCompany') || '';
+
+      let hasCages = false;
+      segmentsData.forEach((segment) => {
+        segment.cages.forEach(cage => {
+          let st = cage.currentStage !== undefined ? cage.currentStage : 0;
+          if (st === 1 || st === 2) {
+             hasCages = true;
+             
+             let displayId = cage.id ? '№' + cage.id : 'Б/Н';
+             let acc = cage.acceptances || { kasktas:{approved:false,remark:""}, rencons:{approved:false,remark:""}, sinergiya:{approved:false,remark:""} };
+             
+             const companies = [
+                { id: 'Kasktaş', name: 'Kasktaş', data: acc.kasktas },
+                { id: 'Rencons', name: 'Rencons', data: acc.rencons },
+                { id: 'Sinergiya', name: 'Sinergiya', data: acc.sinergiya }
+             ];
+
+             let compHtml = '';
+             companies.forEach(comp => {
+                let isMyCompany = (comp.id === userCompany);
+                let btnApproveClass = comp.data.approved ? "btn-approve active" : "btn-approve";
+                let btnApproveText = comp.data.approved ? "✔ " + t('acc_approve') : t('acc_approve');
+                let remarkClass = comp.data.remark ? "btn-remark has-remark" : "btn-remark";
+                
+                compHtml += `
+                  <div class="company-row">
+                     <div class="comp-name">${comp.name}</div>
+                     <div class="comp-actions">
+                        <button class="${btnApproveClass}" ${!isMyCompany ? 'disabled' : ''} onclick="handleAcceptanceAction('${segment.name}', '${cage.id}', '${comp.id}', ${comp.data.approved ? "'unapprove'" : "'approve'"})">${btnApproveText}</button>
+                        <button class="${remarkClass}" ${(!isMyCompany && !comp.data.remark) ? 'disabled' : ''} onclick="openRemarkModal('${segment.name}', '${cage.id}', '${comp.id}')">${t('acc_remark')}</button>
+                     </div>
+                  </div>
+                `;
+             });
+
+             let statusData = getCageStatusData(st);
+             let html = `
+               <div class="acc-card">
+                  <div class="acc-header">
+                     <div class="acc-title">${segment.name} - ${displayId}</div>
+                     <div style="font-size:11px; color:${statusData.color}; font-weight:bold;">${t(statusData.textKey).toUpperCase()}</div>
+                  </div>
+                  <div>
+                     ${compHtml}
+                  </div>
+               </div>
+             `;
+             container.innerHTML += html;
+          }
+        });
+      });
+
+      if (!hasCages) {
+         container.innerHTML = `<div style="color:#64748b; font-size:14px; grid-column: 1/-1;">${t('acc_empty')}</div>`;
+      }
+    }
+
+    async function handleAcceptanceAction(segment, cageId, company, actType, remarkText = "") {
+       const btnId = actType === 'remark' ? 'submitRemarkBtn' : null;
+       if (btnId) {
+          const btn = document.getElementById(btnId);
+          btn.disabled = true;
+          btn.innerText = '...';
+       }
+
+       const userFio = sessionStorage.getItem('authName') || "Неизвестно";
+       
+       try {
+          const url = `${GAS_URL}?action=updateAcceptance&segment=${encodeURIComponent(segment)}&cageId=${encodeURIComponent(cageId)}&company=${encodeURIComponent(company)}&actType=${actType}&remark=${encodeURIComponent(remarkText)}&userFio=${encodeURIComponent(userFio)}`;
+          const response = await fetch(url);
+          const result = await response.json();
+          if (result.success) {
+             if (actType === 'remark') closeRemarkModal();
+             loadData(); 
+          } else {
+             alert(result.error || "Ошибка сохранения");
+          }
+       } catch (err) {
+          alert("Ошибка соединения");
+       }
+
+       if (btnId) {
+          const btn = document.getElementById(btnId);
+          btn.disabled = false;
+          btn.innerText = t('remark_submit');
+       }
+    }
+
+    function openRemarkModal(segment, cageId, company) {
+       currentRemarkCage = { segment, cageId, company };
+       const seg = segmentsData.find(s => s.name === segment);
+       const cage = seg.cages.find(c => String(c.id) === String(cageId));
+       const acc = cage.acceptances || {};
+       let rem = "";
+       if (company === 'Kasktaş') rem = acc.kasktas?.remark || "";
+       if (company === 'Rencons') rem = acc.rencons?.remark || "";
+       if (company === 'Sinergiya') rem = acc.sinergiya?.remark || "";
+
+       const histCont = document.getElementById('remark-history-container');
+       const histText = document.getElementById('remark-history-text');
+       
+       if (rem) {
+          histText.innerText = rem;
+          histCont.style.display = 'block';
+       } else {
+          histCont.style.display = 'none';
+          histText.innerText = "";
+       }
+
+       document.getElementById('new-remark-text').value = "";
+       
+       const userCompany = sessionStorage.getItem('authCompany');
+       if (userCompany !== company) {
+          document.getElementById('new-remark-text').style.display = 'none';
+          document.getElementById('submitRemarkBtn').style.display = 'none';
+       } else {
+          document.getElementById('new-remark-text').style.display = 'block';
+          document.getElementById('submitRemarkBtn').style.display = 'block';
+       }
+
+       document.getElementById('remarkModal').classList.add('active');
+    }
+
+    function closeRemarkModal(e) {
+       if (e && e.target !== document.getElementById('remarkModal')) return;
+       document.getElementById('remarkModal').classList.remove('active');
+       currentRemarkCage = null;
+    }
+
+    function submitRemark() {
+       if (!currentRemarkCage) return;
+       const text = document.getElementById('new-remark-text').value.trim();
+       if (!text) return;
+       handleAcceptanceAction(currentRemarkCage.segment, currentRemarkCage.cageId, currentRemarkCage.company, 'remark', text);
+    }
+
     function renderDashboard() {
       const stageNames = t('stage_names');
       let counts = { red: 0, orange: 0, blue: 0, green: 0 };
@@ -1662,6 +1860,7 @@
       document.getElementById('summary-tbody').innerHTML = tableRows;
 
       renderMap();
+      renderAcceptancePage();
 
       const grid = document.getElementById('segments-grid');
       grid.innerHTML = '';
