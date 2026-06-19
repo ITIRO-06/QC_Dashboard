@@ -884,7 +884,7 @@
     
     .btn-remark { background: transparent; border: 1px solid #f59e0b; color: #f59e0b; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; transition: 0.2s; }
     .btn-remark:hover:not(:disabled) { background: #f59e0b; color: #fff; }
-    .btn-remark.has-remark { background: rgba(245, 158, 11, 0.2); }
+    .btn-remark.has-remark { background: #f59e0b; color: #fff; box-shadow: 0 0 8px rgba(245, 158, 11, 0.6); border-color: #f59e0b; }
     .btn-remark:disabled { opacity: 0.3; cursor: not-allowed; border-color: #64748b; color: #64748b; }
 
     #remarkModal textarea { width: 100%; background: #0f172a; border: 1px solid #334155; color: #f8fafc; padding: 10px; border-radius: 6px; resize: vertical; min-height: 80px; margin-top: 10px; font-family: inherit;}
@@ -1709,8 +1709,17 @@
                 let btnApproveClass = comp.data.approved ? "btn-approve active" : "btn-approve";
                 let btnApproveText = comp.data.approved ? "✔ " + t('acc_approve') : t('acc_approve');
                 let remarkClass = comp.data.remark ? "btn-remark has-remark" : "btn-remark";
+                let btnRemarkText = comp.data.remark ? "❗ " + t('acc_remark') : t('acc_remark');
                 
                 let infoHtml = comp.data.approved && comp.data.info ? `<div style="font-size: 10px; color: #10b981; margin-top: 6px; font-weight: 600; text-align: right; letter-spacing: 0.3px;">${comp.data.info}</div>` : '';
+                
+                // Извлекаем последнюю строку замечания для превью
+                let remarkPreview = '';
+                if (comp.data.remark) {
+                   let lines = comp.data.remark.split('\\n');
+                   let lastLine = lines[lines.length - 1];
+                   remarkPreview = `<div style="font-size: 10px; color: #fde68a; margin-top: 6px; padding: 4px 6px; background: rgba(245, 158, 11, 0.15); border-radius: 4px; border-left: 2px solid #f59e0b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="Нажмите 'Замечания', чтобы прочитать полностью">💬 ${lastLine}</div>`;
+                }
                 
                 compHtml += `
                   <div class="company-row" style="flex-direction: column; align-items: stretch;">
@@ -1718,10 +1727,11 @@
                         <div class="comp-name">${comp.name}</div>
                         <div class="comp-actions">
                            <button class="${btnApproveClass}" ${!hasRights ? 'disabled' : ''} onclick="handleAcceptanceAction('${segment.name}', '${cage.id}', '${comp.id}', ${comp.data.approved ? "'unapprove'" : "'approve'"})">${btnApproveText}</button>
-                           <button class="${remarkClass}" ${(!hasRights && !comp.data.remark) ? 'disabled' : ''} onclick="openRemarkModal('${segment.name}', '${cage.id}', '${comp.id}')">${t('acc_remark')}</button>
+                           <button class="${remarkClass}" ${(!hasRights && !comp.data.remark) ? 'disabled' : ''} onclick="openRemarkModal('${segment.name}', '${cage.id}', '${comp.id}')">${btnRemarkText}</button>
                         </div>
                      </div>
                      ${infoHtml}
+                     ${remarkPreview}
                   </div>
                 `;
              });
