@@ -1285,6 +1285,7 @@
           sessionStorage.setItem('authCompany', result.company);
           sessionStorage.setItem('authRoleTitle', result.roleTitle);
           sessionStorage.setItem('authEmail', result.email);
+          sessionStorage.setItem('authCanApprove', result.canApprove ? "true" : "false");
           checkAuth();
         } else {
           err.innerText = result.error || t('auth_error');
@@ -1683,6 +1684,7 @@
       container.innerHTML = '';
       
       const userCompany = sessionStorage.getItem('authCompany') || '';
+      const userCanApprove = sessionStorage.getItem('authCanApprove') === 'true';
 
       let hasCages = false;
       segmentsData.forEach((segment) => {
@@ -1703,17 +1705,23 @@
              let compHtml = '';
              companies.forEach(comp => {
                 let isMyCompany = (comp.id === userCompany);
+                let hasRights = isMyCompany && userCanApprove;
                 let btnApproveClass = comp.data.approved ? "btn-approve active" : "btn-approve";
                 let btnApproveText = comp.data.approved ? "✔ " + t('acc_approve') : t('acc_approve');
                 let remarkClass = comp.data.remark ? "btn-remark has-remark" : "btn-remark";
                 
+                let infoHtml = comp.data.approved && comp.data.info ? `<div style="font-size: 10px; color: #10b981; margin-top: 6px; font-weight: 600; text-align: right; letter-spacing: 0.3px;">${comp.data.info}</div>` : '';
+                
                 compHtml += `
-                  <div class="company-row">
-                     <div class="comp-name">${comp.name}</div>
-                     <div class="comp-actions">
-                        <button class="${btnApproveClass}" ${!isMyCompany ? 'disabled' : ''} onclick="handleAcceptanceAction('${segment.name}', '${cage.id}', '${comp.id}', ${comp.data.approved ? "'unapprove'" : "'approve'"})">${btnApproveText}</button>
-                        <button class="${remarkClass}" ${(!isMyCompany && !comp.data.remark) ? 'disabled' : ''} onclick="openRemarkModal('${segment.name}', '${cage.id}', '${comp.id}')">${t('acc_remark')}</button>
+                  <div class="company-row" style="flex-direction: column; align-items: stretch;">
+                     <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                        <div class="comp-name">${comp.name}</div>
+                        <div class="comp-actions">
+                           <button class="${btnApproveClass}" ${!hasRights ? 'disabled' : ''} onclick="handleAcceptanceAction('${segment.name}', '${cage.id}', '${comp.id}', ${comp.data.approved ? "'unapprove'" : "'approve'"})">${btnApproveText}</button>
+                           <button class="${remarkClass}" ${(!hasRights && !comp.data.remark) ? 'disabled' : ''} onclick="openRemarkModal('${segment.name}', '${cage.id}', '${comp.id}')">${t('acc_remark')}</button>
+                        </div>
                      </div>
+                     ${infoHtml}
                   </div>
                 `;
              });
@@ -1795,7 +1803,10 @@
        document.getElementById('new-remark-text').value = "";
        
        const userCompany = sessionStorage.getItem('authCompany');
-       if (userCompany !== company) {
+       const userCanApprove = sessionStorage.getItem('authCanApprove') === 'true';
+       const hasRights = (userCompany === company) && userCanApprove;
+
+       if (!hasRights) {
           document.getElementById('new-remark-text').style.display = 'none';
           document.getElementById('submitRemarkBtn').style.display = 'none';
        } else {
