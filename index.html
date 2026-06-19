@@ -1,0 +1,1738 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Мониторинг: Стена в грунте</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/panzoom@9.4.0/dist/panzoom.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: #0f172a;
+      color: #f8fafc;
+      min-height: 100vh;
+    }
+
+    /* Авторизация */
+    .login-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, #0a1628 0%, #0f172a 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+    }
+
+    .login-box {
+      background: rgba(30, 41, 59, 0.8);
+      backdrop-filter: blur(12px);
+      border-radius: 12px;
+      padding: 50px 40px;
+      width: 400px;
+      max-width: 90%;
+      border: 1px solid #334155;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    .login-box h2 {
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 24px;
+      color: #38bdf8;
+      font-weight: 600;
+    }
+
+    .login-box .subtitle {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 13px;
+      color: #94a3b8;
+    }
+
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .login-input {
+      padding: 14px;
+      border-radius: 6px;
+      border: 1px solid #334155;
+      background: #0f172a;
+      color: #f8fafc;
+      font-size: 15px;
+      transition: border-color 0.3s;
+    }
+
+    .login-input:focus {
+      outline: none;
+      border-color: #38bdf8;
+    }
+
+    .login-btn {
+      padding: 14px;
+      border-radius: 6px;
+      border: none;
+      background: #38bdf8;
+      color: #0f172a;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 10px;
+      text-transform: uppercase;
+    }
+
+    .login-btn:hover {
+      background: #0ea5e9;
+      color: #fff;
+    }
+
+    .login-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .login-error {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid #ef4444;
+      color: #f87171;
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      text-align: center;
+      display: none;
+    }
+
+    #appContainer {
+      display: none;
+    }
+
+    /* Шапка */
+    .header {
+      background: rgba(30, 41, 59, 0.8);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .logo-container {
+      height: 45px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+
+    .logo-container img {
+      height: 100%;
+      width: auto;
+      display: block;
+      border-radius: 8px;
+    }
+
+    .title-block h1 {
+      font-size: 22px;
+      font-weight: 600;
+      color: #f8fafc;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .title-block .subtitle {
+      font-size: 13px;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .dev-block {
+      border: 1px solid #334155;
+      border-radius: 6px;
+      padding: 6px 14px;
+      font-size: 11px;
+      color: #94a3b8;
+      font-weight: 500;
+      background: rgba(15, 23, 42, 0.4);
+      letter-spacing: 0.5px;
+    }
+
+    .controls-panel {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .lang-switcher {
+      display: flex;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid #334155;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .lang-btn {
+      background: transparent;
+      border: none;
+      color: #64748b;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .lang-btn:hover {
+      color: #f8fafc;
+    }
+
+    .lang-btn.active {
+      background: #38bdf8;
+      color: #0f172a;
+    }
+
+    .refresh-btn {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid #334155;
+      border-radius: 6px;
+      padding: 6px;
+      cursor: pointer;
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.2s;
+    }
+
+    .refresh-btn:hover {
+      background: #1e293b;
+      border-color: #38bdf8;
+      color: #f8fafc;
+    }
+
+    .refresh-btn svg {
+      width: 18px;
+      height: 18px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .spin {
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Мини-профиль */
+    .user-profile-group {
+      display: flex;
+      align-items: stretch;
+      gap: 10px;
+      height: 42px;
+    }
+
+    .user-profile-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #0f172a;
+      padding: 0 14px;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+
+    .user-profile-btn:hover {
+      background: rgba(30, 41, 59, 0.8);
+      border-color: #38bdf8;
+    }
+
+    .user-avatar {
+      width: 26px;
+      height: 26px;
+      background: #38bdf8;
+      color: #0f172a;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 11px;
+      letter-spacing: 0.5px;
+    }
+
+    .user-info-mini {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .user-name-mini {
+      color: #10b981;
+      font-weight: 600;
+      font-size: 13px;
+      line-height: 1.2;
+    }
+
+    .user-role-mini {
+      color: #94a3b8;
+      font-size: 10px;
+      line-height: 1.2;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .logout-btn {
+      background: transparent;
+      border: 1px solid #ef4444;
+      color: #ef4444;
+      padding: 0 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      cursor: pointer;
+      transition: 0.2s;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+    }
+
+    .logout-btn:hover {
+      background: #ef4444;
+      color: #fff;
+    }
+
+    .last-update {
+      font-size: 12px;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .status-dot-blinking {
+      border-radius: 50%;
+      animation: soft-glow 2s infinite alternate;
+    }
+
+    @keyframes soft-glow {
+      0% {
+        opacity: 0.8;
+        box-shadow: 0 0 0px currentColor;
+      }
+
+      100% {
+        opacity: 1;
+        box-shadow: 0 0 8px currentColor;
+      }
+    }
+
+    /* Вкладки */
+    .nav-tabs {
+      display: flex;
+      padding: 15px 30px 0;
+      gap: 10px;
+      border-bottom: 1px solid #1e293b;
+    }
+
+    .nav-tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      border-bottom: none;
+      background: transparent;
+      color: #64748b;
+      font-weight: 600;
+      font-size: 13px;
+      border-radius: 6px 6px 0 0;
+      transition: all 0.2s;
+      text-transform: uppercase;
+    }
+
+    .nav-tab:hover {
+      color: #f8fafc;
+      background: rgba(30, 41, 59, 0.5);
+    }
+
+    .nav-tab.active {
+      color: #38bdf8;
+      background: rgba(30, 41, 59, 0.8);
+      border-color: #38bdf8;
+      border-bottom: 1px solid #1e293b;
+      margin-bottom: -1px;
+    }
+
+    .content {
+      padding: 25px 30px;
+    }
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Аналитика */
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .stat-card {
+      background: rgba(30, 41, 59, 0.6);
+      backdrop-filter: blur(10px);
+      border-radius: 6px;
+      padding: 15px;
+      border: 1px solid #334155;
+      border-left: 4px solid #475569;
+    }
+
+    .stat-card .label {
+      font-size: 12px;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+
+    .stat-card .value {
+      font-size: 28px;
+      font-weight: 600;
+      color: #f8fafc;
+    }
+
+    .charts-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 15px;
+    }
+
+    .chart-card {
+      background: rgba(30, 41, 59, 0.6);
+      border-radius: 6px;
+      padding: 15px;
+      border: 1px solid #334155;
+    }
+
+    .chart-card h3 {
+      margin-bottom: 15px;
+      font-size: 14px;
+      color: #94a3b8;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .chart-wrapper {
+      position: relative;
+      height: 250px;
+      width: 100%;
+    }
+
+    /* Карта */
+    .map-scroll-area {
+      width: 100%;
+      max-height: 75vh;
+      overflow: hidden;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      background: #1e293b;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+
+    .map-inner {
+      position: relative;
+      width: 100%;
+      min-width: 1200px;
+      cursor: grab;
+      user-select: none;
+    }
+
+    .map-inner:active {
+      cursor: grabbing;
+    }
+
+    .map-inner img {
+      width: 100%;
+      height: auto;
+      display: block;
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .pin {
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      border: 2px solid #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+      z-index: 10;
+      transition: transform 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: bold;
+      color: #fff;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+      user-select: none;
+    }
+
+    .pin.active {
+      cursor: pointer;
+    }
+
+    .pin.active:hover {
+      transform: translate(-50%, -50%) scale(1.3);
+      z-index: 20;
+    }
+
+    .pin.inactive {
+      background: #475569;
+      border-color: #64748b;
+      color: #cbd5e1;
+      opacity: 0.85;
+    }
+
+    .pin-pulse {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 50%;
+      animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+      z-index: -1;
+    }
+
+    @keyframes ping {
+
+      75%,
+      100% {
+        transform: scale(2.2);
+        opacity: 0;
+      }
+    }
+
+    .pin .tooltip {
+      visibility: hidden;
+      position: absolute;
+      bottom: 130%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.95);
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      white-space: nowrap;
+      font-weight: 600;
+      opacity: 0;
+      transition: opacity 0.3s;
+      border: 1px solid #38bdf8;
+      pointer-events: none;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+      z-index: 30;
+    }
+
+    .pin:hover .tooltip {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .legend-panel {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+      background: rgba(30, 41, 59, 0.4);
+      padding: 12px 15px;
+      border-radius: 6px;
+      border: 1px solid #334155;
+    }
+
+    /* Сетка захваток */
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 15px;
+    }
+
+    .segment-card {
+      background: rgba(30, 41, 59, 0.4);
+      border-radius: 6px;
+      padding: 15px;
+      border: 1px solid #334155;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .segment-card:hover {
+      border-color: #38bdf8;
+      box-shadow: 0 4px 15px rgba(56, 189, 248, 0.05);
+      transform: translateY(-1px);
+    }
+
+    .segment-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 15px;
+    }
+
+    .segment-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #f8fafc;
+    }
+
+    .segment-count {
+      font-size: 11px;
+      color: #64748b;
+      background: #0f172a;
+      padding: 4px 8px;
+      border-radius: 4px;
+      border: 1px solid #1e293b;
+      font-weight: 600;
+    }
+
+    .cage-item {
+      background: #0f172a;
+      border-radius: 6px;
+      padding: 12px;
+      margin-bottom: 10px;
+      border: 1px solid #1e293b;
+    }
+
+    .cage-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 15px;
+      align-items: center;
+    }
+
+    .cage-id {
+      font-size: 14px;
+      color: #f8fafc;
+      margin-right: 10px;
+      font-weight: 700;
+    }
+
+    .cage-type {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 6px;
+      border-radius: 4px;
+      color: #0f172a;
+      text-transform: uppercase;
+    }
+
+    .cage-status {
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .stages-container {
+      position: relative;
+      margin-top: 10px;
+      padding: 0 10px;
+    }
+
+    .stages-line {
+      position: absolute;
+      top: 5px;
+      left: 10px;
+      right: 10px;
+      height: 2px;
+      background: #1e293b;
+      z-index: 1;
+    }
+
+    .stages-fill {
+      position: absolute;
+      top: 5px;
+      left: 10px;
+      height: 2px;
+      z-index: 2;
+      transition: width 0.5s ease;
+    }
+
+    .stages-dots {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      z-index: 3;
+    }
+
+    .stage-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 16px;
+    }
+
+    .stage-dot {
+      width: 12px;
+      height: 12px;
+      background: #0f172a;
+      border: 2px solid #334155;
+      border-radius: 50%;
+      margin-bottom: 10px;
+      transition: all 0.3s;
+    }
+
+    .stage-label {
+      font-size: 10px;
+      color: #64748b;
+      text-align: center;
+      white-space: nowrap;
+      position: absolute;
+      bottom: -18px;
+      font-weight: 600;
+    }
+
+    /* Модальное окно */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(5px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .modal-box {
+      background: #1e293b;
+      border: 1px solid #38bdf8;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 550px;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      transform: translateY(20px);
+      transition: transform 0.3s ease;
+    }
+
+    .modal-overlay.active .modal-box {
+      transform: translateY(0);
+    }
+
+    .modal-header {
+      padding: 15px 20px;
+      border-bottom: 1px solid #334155;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: 8px 8px 0 0;
+    }
+
+    .modal-header h2 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #f8fafc;
+    }
+
+    .modal-close {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 24px;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .modal-close:hover {
+      color: #ef4444;
+    }
+
+    .modal-body {
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .modal-cage {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+
+    .m-cage-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed #334155;
+    }
+
+    .m-cage-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      font-size: 13px;
+    }
+
+    .m-data-point {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .m-data-label {
+      color: #64748b;
+      text-transform: uppercase;
+      font-size: 10px;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    .m-data-value {
+      color: #f8fafc;
+      font-weight: 500;
+    }
+
+    .m-time {
+      color: #38bdf8;
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="login-overlay" id="loginScreen">
+    <div class="login-box">
+      <h2 data-i18n="auth_title">Авторизация</h2>
+      <p class="subtitle" data-i18n="auth_subtitle">Панель управления СВГ</p>
+      <form class="login-form" onsubmit="handleLogin(event)">
+        <input type="text" id="username" class="login-input" placeholder="Имя пользователя" required>
+        <input type="password" id="password" class="login-input" placeholder="Пароль" required>
+        <div class="login-error" id="loginError" data-i18n="auth_error">Неверный логин или пароль</div>
+        <button type="submit" class="login-btn" id="loginBtn" data-i18n="auth_btn">Войти</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="appContainer">
+    <div class="header">
+      <div class="header-left">
+        <a href="https://www.kasktas.com.tr/en/" target="_blank" class="logo-container">
+          <img src="1.Kasktas Logo Horizontal Blue.jpg" alt="Kasktaş">
+        </a>
+        <div class="title-block">
+          <h1 data-i18n="title">Мониторинг Каркасов</h1>
+          <div class="subtitle" data-i18n="subtitle">Стена в грунте • Информационная панель управления</div>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <div class="dev-block" data-i18n="dev">DEVELOPER: Kunarov Damir</div>
+        <div class="controls-panel">
+          <div class="lang-switcher">
+            <button class="lang-btn active" onclick="setLang('ru')">RU</button>
+            <button class="lang-btn" onclick="setLang('en')">EN</button>
+            <button class="lang-btn" onclick="setLang('tr')">TR</button>
+          </div>
+          <button class="refresh-btn" id="refresh-btn" onclick="loadData()" title="Refresh Data">
+            <svg viewBox="0 0 24 24">
+              <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+              <path d="M3 3v5h5"></path>
+              <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"></path>
+              <path d="M16 21v-5h5"></path>
+            </svg>
+          </button>
+        </div>
+
+        <div class="user-profile-group">
+          <div class="user-profile-btn" onclick="switchTab('profile', event)" title="Открыть профиль">
+            <div class="user-avatar" id="avatar-initials">U</div>
+            <div class="user-info-mini">
+              <span class="user-name-mini" id="current-user-name">GUEST</span>
+              <span class="user-role-mini" id="current-user-role"></span>
+            </div>
+          </div>
+          <button class="logout-btn" onclick="logout()" data-i18n="logout">ВЫХОД</button>
+        </div>
+
+        <div class="last-update">
+          <div class="status-indicator status-dot-blinking"
+            style="color: #34d399; background: currentColor; width: 8px; height: 8px;" id="status-blinker"></div>
+          <span id="last-update-text" data-i18n="sync">Синхронизация...</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-tabs">
+      <div class="nav-tab active" onclick="switchTab('analytics', event)" data-i18n="tab_analytics">АНАЛИТИКА</div>
+      <div class="nav-tab" onclick="switchTab('map', event)" data-i18n="tab_map">КАРТА ПРОЕКТА</div>
+      <div class="nav-tab" onclick="switchTab('details', event)" data-i18n="tab_details">ОБЪЕКТЫ (ЗАХВАТКИ)</div>
+    </div>
+
+    <div class="content">
+      <div id="analytics" class="page active">
+        <div class="overview-grid" id="kpi-board"></div>
+        <div class="charts-row">
+          <div class="chart-card">
+            <h3 data-i18n="chart_status">Распределение статусов</h3>
+            <div class="chart-wrapper"><canvas id="statusPieChart"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <h3 data-i18n="chart_type">Номенклатура</h3>
+            <div class="chart-wrapper"><canvas id="typeBarChart"></canvas></div>
+          </div>
+        </div>
+
+        <div
+          style="margin-top: 25px; background: rgba(30, 41, 59, 0.6); border-radius: 6px; border: 1px solid #334155; padding: 15px;">
+          <h3 data-i18n="summary_table"
+            style="margin-bottom: 15px; font-size: 14px; color: #94a3b8; font-weight: 600; text-transform: uppercase;">
+            Сводная таблица по захваткам</h3>
+          <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px;">
+              <thead>
+                <tr style="border-bottom: 1px solid #334155; color: #94a3b8;">
+                  <th style="padding: 10px; font-weight: 600;" data-i18n="th_segment">Захватка</th>
+                  <th style="padding: 10px; font-weight: 600;" data-i18n="th_total">Всего</th>
+                  <th style="padding: 10px; font-weight: 600; color: #10b981;" data-i18n="th_green">Завершено</th>
+                  <th style="padding: 10px; font-weight: 600; color: #38bdf8;" data-i18n="th_blue">К погружению</th>
+                  <th style="padding: 10px; font-weight: 600; color: #f59e0b;" data-i18n="th_orange">Сдача</th>
+                  <th style="padding: 10px; font-weight: 600; color: #ef4444;" data-i18n="th_red">Контроль</th>
+                </tr>
+              </thead>
+              <tbody id="summary-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div id="map" class="page">
+        <div class="legend-panel">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="width: 10px; height: 10px; background: #475569; border-radius: 50%;"></div>
+            <span data-i18n="legend_gray" style="font-size: 11px; color: #cbd5e1; font-weight: 600;">В плане / Нет
+              данных</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div class="status-dot-blinking" style="width: 10px; height: 10px; background: #ef4444; color: #ef4444;">
+            </div>
+            <span data-i18n="legend_red" style="font-size: 11px; color: #cbd5e1; font-weight: 600;"></span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div class="status-dot-blinking" style="width: 10px; height: 10px; background: #f59e0b; color: #f59e0b;">
+            </div>
+            <span data-i18n="legend_orange" style="font-size: 11px; color: #cbd5e1; font-weight: 600;"></span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div class="status-dot-blinking" style="width: 10px; height: 10px; background: #38bdf8; color: #38bdf8;">
+            </div>
+            <span data-i18n="legend_blue" style="font-size: 11px; color: #cbd5e1; font-weight: 600;"></span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div class="status-dot-blinking" style="width: 10px; height: 10px; background: #10b981; color: #10b981;">
+            </div>
+            <span data-i18n="legend_green" style="font-size: 11px; color: #cbd5e1; font-weight: 600;"></span>
+          </div>
+        </div>
+
+        <div class="map-scroll-area">
+          <div class="map-inner" id="project-map-container">
+            <img src="Plan.jpg" alt="План проекта">
+          </div>
+        </div>
+      </div>
+
+      <div id="details" class="page">
+        <div class="legend-panel">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="width: 10px; height: 10px; background: #475569; border-radius: 50%;"></div>
+            <span data-i18n="legend_gray" style="font-size: 11px; color: #cbd5e1; font-weight: 600;">В плане / Нет
+              данных</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div class="status-dot-blinking" style="width: 10px; height: 10px; background: #ef4444; color: #ef4444;">
+            </div>
+            <span data-i18n="legend_red" style="font-size: 11px; color: #cbd5e1; font-weight: 600;"></span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div class="status-dot-blinking" style="width: 10px; height: 10px; background: #f59e0b; color: #f59e0b;">
+            </div>
+            <span data-i18n="legend_orange" style="font-size: 11px; color: #cbd5e1; font-weight: 600;"></span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div class="status-dot-blinking" style="width: 10px; height: 10px; background: #38bdf8; color: #38bdf8;">
+            </div>
+            <span data-i18n="legend_blue" style="font-size: 11px; color: #cbd5e1; font-weight: 600;"></span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div class="status-dot-blinking" style="width: 10px; height: 10px; background: #10b981; color: #10b981;">
+            </div>
+            <span data-i18n="legend_green" style="font-size: 11px; color: #cbd5e1; font-weight: 600;"></span>
+          </div>
+        </div>
+        <div class="grid-container" id="segments-grid"></div>
+      </div>
+
+      <div id="profile" class="page">
+        <div
+          style="max-width: 500px; margin: 0 auto; background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(10px); border-radius: 8px; border: 1px solid #334155; padding: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.3);">
+          <h3 style="margin-bottom: 25px; font-size: 18px; color: #38bdf8; text-transform: uppercase; font-weight: 600;"
+            data-i18n="profile_title">Личный кабинет</h3>
+
+          <div
+            style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 35px; padding-bottom: 25px; border-bottom: 1px solid #334155;">
+            <div>
+              <div
+                style="font-size: 10px; color: #64748b; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;"
+                data-i18n="prof_fio">ФИО СОТРУДНИКА</div>
+              <div id="prof-fio" style="font-size: 16px; color: #f8fafc; font-weight: 500; margin-top: 4px;">-</div>
+            </div>
+            <div>
+              <div
+                style="font-size: 10px; color: #64748b; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;"
+                data-i18n="prof_email">E-MAIL</div>
+              <div id="prof-email" style="font-size: 16px; color: #f8fafc; font-weight: 500; margin-top: 4px;">-</div>
+            </div>
+            <div>
+              <div
+                style="font-size: 10px; color: #64748b; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;"
+                data-i18n="prof_company">КОМПАНИЯ</div>
+              <div id="prof-company" style="font-size: 16px; color: #f8fafc; font-weight: 500; margin-top: 4px;">-</div>
+            </div>
+            <div>
+              <div
+                style="font-size: 10px; color: #64748b; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;"
+                data-i18n="prof_role">ДОЛЖНОСТЬ</div>
+              <div id="prof-role" style="font-size: 16px; color: #f8fafc; font-weight: 500; margin-top: 4px;">-</div>
+            </div>
+          </div>
+
+          <h4
+            style="margin-bottom: 15px; font-size: 13px; color: #94a3b8; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;"
+            data-i18n="change_pass_title">Смена пароля</h4>
+          <form class="login-form" onsubmit="handleChangePassword(event)">
+            <input type="password" id="oldPassword" class="login-input" placeholder="Текущий пароль" required
+              style="width:100%;">
+            <input type="password" id="newPassword" class="login-input" placeholder="Новый пароль" required
+              style="width:100%;">
+            <input type="password" id="confirmPassword" class="login-input" placeholder="Подтвердите новый пароль"
+              required style="width:100%;">
+
+            <div class="login-error" id="passError"></div>
+            <div id="passSuccess"
+              style="background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; color: #34d399; padding: 12px; border-radius: 6px; font-size: 13px; text-align: center; display: none; font-weight: 600;">
+            </div>
+
+            <button type="submit" class="login-btn" id="changePassBtn" data-i18n="save_pass_btn">Сохранить новый
+              пароль</button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="segmentModal" onclick="closeModal(event)">
+    <div class="modal-box" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h2 id="modal-title">Детали захватки</h2>
+        <button class="modal-close" onclick="closeModal()">×</button>
+      </div>
+      <div class="modal-body" id="modal-body"></div>
+    </div>
+  </div>
+
+  <script>
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbyBN7_EwsopXwUmlNwb5691_YWjd_mriosldonyMrnK8AtyYMSNGaC11unR_SA-LNgV/exec"; // НЕ ЗАБУДЬТЕ ВСТАВИТЬ ВАШУ ССЫЛКУ!
+
+    const mapCoordinates = {
+      "ЭЦ1-КР3.1": { "x": "26.94", "y": "3.85" }, "ЭЦ7-КР3.1": { "x": "64.62", "y": "17.14" },
+      "ЭЦ2-КР3.5": { "x": "33.23", "y": "4.32" }, "ЭЦ6-КР3": { "x": "58.81", "y": "13.34" },
+      "ЭЦ3-КР3.5": { "x": "39.63", "y": "5.44" }, "ЭЦ5-КР3": { "x": "52.60", "y": "10.06" },
+      "ЭЦ8-КР3.5": { "x": "70.37", "y": "21.65" }, "ЭЦ4-КР3.2": { "x": "46.15", "y": "7.35" },
+      "ЭЦ15-КР4.1": { "x": "95.06", "y": "70.18" }, "ЭЦ9-КР3.5": { "x": "76.07", "y": "26.86" },
+      "ЭЦ10-КР1": { "x": "79.96", "y": "30.91" }, "ЭЦ11-КР3.2": { "x": "83.98", "y": "35.36" },
+      "ЭЦ12-КР3.3": { "x": "89.37", "y": "42.34" }, "ЭЦ13-КР10": { "x": "94.35", "y": "49.48" },
+      "ЭЦ14-КР15": { "x": "96.74", "y": "59.97" }, "ЭЦ16-КР1": { "x": "93.44", "y": "77.15" },
+      "ЭЦ17-КР4": { "x": "91.60", "y": "84.49" }, "ЭЦ18-КР14": { "x": "88.62", "y": "94.21" },
+      "ЭЦ19-КР13": { "x": "83.04", "y": "98.07" }, "ЭЦ20-КР2.5": { "x": "77.05", "y": "95.34" },
+      "ЭЦ21-КР2.4": { "x": "70.84", "y": "92.68" }, "ЭЦ22-КР2.3": { "x": "64.32", "y": "90.81" },
+      "ЭЦ23-КР2": { "x": "57.72", "y": "89.79" }, "ЭЦ24-КР2": { "x": "51.36", "y": "89.56" },
+      "ЭЦ25-КР2": { "x": "45.00", "y": "90.21" }, "ЭЦ26-КР2.2": { "x": "38.89", "y": "91.60" },
+      "ЭЦ27-КР2.1": { "x": "32.78", "y": "93.73" }, "ЭЦ28-КР12": { "x": "26.44", "y": "95.88" },
+      "ЭЦ29-КР11": { "x": "20.14", "y": "92.45" }, "ЭЦ30-КР4.2": { "x": "15.21", "y": "84.63" },
+      "ЭЦ31-КР4": { "x": "12.69", "y": "74.25" }, "ЭЦ32-КР5": { "x": "11.19", "y": "67.00" },
+      "ЭЦ33-КР4": { "x": "9.71", "y": "59.85" }, "ЭЦ34-КР4": { "x": "7.46", "y": "49.14" },
+      "ЭЦ35-КР1": { "x": "5.95", "y": "41.63" }, "ЭЦ36-КР9": { "x": "4.48", "y": "33.43" },
+      "ЭЦ37-КР8": { "x": "5.12", "y": "21.59" }, "ЭЦ38-КР7": { "x": "8.85", "y": "11.47" },
+      "ЭЦ39-КР6": { "x": "14.45", "y": "5.26" }, "ЭЦ40-КР3.4": { "x": "20.79", "y": "4.07" }
+    };
+
+    const segmentOrder = [
+      "ЭЦ1-КР3.1", "ЭЦ7-КР3.1", "ЭЦ2-КР3.5", "ЭЦ6-КР3", "ЭЦ3-КР3.5",
+      "ЭЦ5-КР3", "ЭЦ8-КР3.5", "ЭЦ4-КР3.2", "ЭЦ15-КР4.1", "ЭЦ9-КР3.5",
+      "ЭЦ14-КР15", "ЭЦ16-КР1", "ЭЦ10-КР1", "ЭЦ13-КР10", "ЭЦ17-КР4",
+      "ЭЦ12-КР3.3", "ЭЦ18-КР14", "ЭЦ11-КР3.2", "ЭЦ26-КР2.2", "ЭЦ19-КР13",
+      "ЭЦ25-КР2", "ЭЦ20-КР2.5", "ЭЦ24-КР2", "ЭЦ21-КР2.4", "ЭЦ23-КР2",
+      "ЭЦ27-КР2.1", "ЭЦ22-КР2.3", "ЭЦ32-КР5", "ЭЦ28-КР12", "ЭЦ33-КР4",
+      "ЭЦ31-КР4", "ЭЦ40-КР3.4", "ЭЦ30-КР4.2", "ЭЦ39-КР6", "ЭЦ34-КР4",
+      "ЭЦ38-КР7", "ЭЦ35-КР1", "ЭЦ37-КР8", "ЭЦ29-КР11", "ЭЦ36-КР9"
+    ];
+
+    let segmentsData = [];
+    let pieChartInstance = null;
+    let barChartInstance = null;
+    let currentLang = 'ru';
+    let panzoomInstance = null;
+
+    function checkAuth() {
+      const authName = sessionStorage.getItem('authName');
+      const authRole = sessionStorage.getItem('authRole');
+
+      if (authName) {
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('appContainer').style.display = 'block';
+
+        let initials = "U";
+        if (authName && authName !== "Без имени") {
+          const parts = authName.split(' ');
+          initials = parts.length > 1 ? (parts[0][0] + parts[1][0]) : parts[0][0];
+        }
+        document.getElementById('avatar-initials').innerText = initials.toUpperCase();
+
+        document.getElementById('current-user-name').innerText = authName;
+        document.getElementById('current-user-role').innerText = authRole ? authRole : '';
+
+        document.getElementById('prof-fio').innerText = authName;
+        document.getElementById('prof-company').innerText = sessionStorage.getItem('authCompany') || '---';
+        document.getElementById('prof-role').innerText = sessionStorage.getItem('authRoleTitle') || '---';
+        document.getElementById('prof-email').innerText = sessionStorage.getItem('authEmail') || '---';
+
+        loadData();
+
+        const mapElement = document.getElementById('project-map-container');
+        if (mapElement && !panzoomInstance) {
+          panzoomInstance = panzoom(mapElement, {
+            maxZoom: 5,
+            minZoom: 0.5,
+            zoomSpeed: 0.06,
+            smoothScroll: true,
+            beforeWheel: function (e) { return false; }
+            // onTouch убран, чтобы не ломать стандартное поведение на телефонах
+          });
+        }
+      }
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      const u = document.getElementById('username').value.trim();
+      const p = document.getElementById('password').value;
+      const btn = document.getElementById('loginBtn');
+      const err = document.getElementById('loginError');
+
+      btn.disabled = true;
+      btn.innerText = t('auth_btn_checking') || 'ПРОВЕРКА...';
+      err.style.display = 'none';
+
+      try {
+        const url = `${GAS_URL}?action=login&username=${encodeURIComponent(u)}&password=${encodeURIComponent(p)}`;
+        const response = await fetch(url);
+        const result = await response.json();
+
+        if (result.success) {
+          sessionStorage.setItem('authUsername', result.username);
+          sessionStorage.setItem('authName', result.fio);
+          sessionStorage.setItem('authRole', result.role);
+          sessionStorage.setItem('authCompany', result.company);
+          sessionStorage.setItem('authRoleTitle', result.roleTitle);
+          sessionStorage.setItem('authEmail', result.email);
+          checkAuth();
+        } else {
+          err.innerText = result.error || t('auth_error');
+          err.style.display = 'block';
+        }
+      } catch (error) {
+        err.innerText = t('sync_err');
+        err.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.innerText = t('auth_btn') || 'ВОЙТИ';
+      }
+    }
+
+    async function handleChangePassword(e) {
+      e.preventDefault();
+
+      const username = sessionStorage.getItem('authUsername');
+      const oldPassword = document.getElementById('oldPassword').value;
+      const newPassword = document.getElementById('newPassword').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+
+      const errBox = document.getElementById('passError');
+      const successBox = document.getElementById('passSuccess');
+      const btn = document.getElementById('changePassBtn');
+
+      errBox.style.display = 'none';
+      successBox.style.display = 'none';
+
+      if (newPassword !== confirmPassword) {
+        errBox.innerText = t('pass_match_err');
+        errBox.style.display = 'block';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerText = '...';
+
+      try {
+        const url = `${GAS_URL}?action=changePassword&username=${encodeURIComponent(username)}&oldPassword=${encodeURIComponent(oldPassword)}&newPassword=${encodeURIComponent(newPassword)}`;
+        const response = await fetch(url);
+        const result = await response.json();
+
+        if (result.success) {
+          successBox.innerText = t('pass_changed_ok');
+          successBox.style.display = 'block';
+          e.target.reset();
+        } else {
+          errBox.innerText = result.error;
+          errBox.style.display = 'block';
+        }
+      } catch (error) {
+        errBox.innerText = t('sync_err');
+        errBox.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.innerText = t('save_pass_btn');
+      }
+    }
+
+    function logout() {
+      sessionStorage.clear();
+      location.reload();
+    }
+
+    const i18n = {
+      ru: {
+        title: "Мониторинг Каркасов", subtitle: "Стена в грунте • Информационная панель управления", dev: "DEVELOPER: Kunarov Damir",
+        auth_title: "Авторизация", auth_subtitle: "Панель управления СВГ", auth_error: "Неверный логин или пароль", auth_btn: "Войти", auth_btn_checking: "ПРОВЕРКА...",
+        logout: "ВЫХОД", tab_analytics: "АНАЛИТИКА", tab_map: "КАРТА ПРОЕКТА", tab_details: "ОБЪЕКТЫ (ЗАХВАТКИ)",
+        profile_title: "Личный кабинет", prof_fio: "ФИО Сотрудника", prof_email: "E-mail", prof_company: "Компания", prof_role: "Должность",
+        change_pass_title: "Безопасность (Смена пароля)", save_pass_btn: "ОБНОВИТЬ ПАРОЛЬ", pass_match_err: "Новые пароли не совпадают!", pass_changed_ok: "Пароль успешно обновлен!",
+        chart_status: "Распределение статусов", chart_type: "Номенклатура",
+        legend_red: "Не прошёл входной контроль", legend_orange: "В процессе сдачи", legend_blue: "Готов к погружению", legend_green: "Завершён", legend_gray: "В плане / Нет данных",
+        legend_gray_cage: "Ожидается поставка",
+        stage_names: ["Входной контроль", "Сдача", "Ожидание", "Погружение"],
+        vol: "КАРКАСОВ:", time_spent: "Затрачено времени", current_stage: "Теку этап",
+        sync: "Синхронизация...", sync_ok: "SYNC:", sync_err: "СБОЙ СВЯЗИ", no_url: "ОШИБКА: НЕТ URL",
+        time_err: "Ошибка дат", no_data: "Нет данных", d: "д", h: "ч", m: "м",
+        summary_table: "Сводная таблица по захваткам", th_segment: "Захватка", th_total: "Всего", th_green: "Завершено", th_blue: "К погружению", th_orange: "Сдача", th_red: "Контроль"
+      },
+      en: {
+        title: "Cage Monitoring", subtitle: "Diaphragm Wall • Dashboard", dev: "DEVELOPER: Kunarov Damir",
+        auth_title: "Authorization", auth_subtitle: "D-Wall Control Panel", auth_error: "Invalid login or password", auth_btn: "Login", auth_btn_checking: "CHECKING...",
+        logout: "LOGOUT", tab_analytics: "ANALYTICS", tab_map: "PROJECT MAP", tab_details: "OBJECTS (PANELS)",
+        profile_title: "Personal Account", prof_fio: "Full Name", prof_email: "E-mail", prof_company: "Company", prof_role: "Position",
+        change_pass_title: "Security (Change Password)", save_pass_btn: "UPDATE PASSWORD", pass_match_err: "New passwords do not match!", pass_changed_ok: "Password updated successfully!",
+        chart_status: "Status Distribution", chart_type: "Nomenclature",
+        legend_red: "Failed/Awaiting Inspection", legend_orange: "Handover in Progress", legend_blue: "Ready for Submersion", legend_green: "Completed", legend_gray: "Planned / No data",
+        legend_gray_cage: "Delivery expected",
+        stage_names: ["Inspection", "Handover", "Awaiting", "Submersion"],
+        vol: "VOL:", time_spent: "Time spent", current_stage: "Current stage",
+        sync: "Syncing...", sync_ok: "SYNC:", sync_err: "CONNECTION ERROR", no_url: "ERROR: NO URL",
+        time_err: "Date error", no_data: "No data", d: "d", h: "h", m: "m",
+        summary_table: "Segment Summary Table", th_segment: "Segment", th_total: "Total", th_green: "Completed", th_blue: "Ready", th_orange: "Handover", th_red: "Inspection"
+      },
+      tr: {
+        title: "Kafes İzleme", subtitle: "Diyafram Duvar • Kontrol Paneli", dev: "GELİŞTİRİCİ: Kunarov Damir",
+        auth_title: "Giriş", auth_subtitle: "Diyafram Duvar Kontrol Paneli", auth_error: "Geçersiz kullanıcı adı veya şifre", auth_btn: "Giriş", auth_btn_checking: "KONTROL EDİLİYOR...",
+        logout: "ÇIKIŞ", tab_analytics: "ANALİZ", tab_map: "PROJE HARİTASI", tab_details: "NESNELER (PANELLER)",
+        profile_title: "Kişisel Hesap", prof_fio: "Adı Soyadı", prof_email: "E-mail", prof_company: "Firma / Şirket", prof_role: "Görevi",
+        change_pass_title: "Güvenlik (Şifre Değiştir)", save_pass_btn: "ŞİFREYİ GÜNCELLE", pass_match_err: "Yeni şifreler eşleşmiyor!", pass_changed_ok: "Şifre başarıyla güncellendi!",
+        chart_status: "Durum Dağılımı", chart_type: "İsimlendirme",
+        legend_red: "Kontrol Bekliyor/Başarısız", legend_orange: "Teslim Sürecinde", legend_blue: "Daldırmaya Hazır", legend_green: "Tamamlandı", legend_gray: "Planlanmış / Veri yok",
+        legend_gray_cage: "Teslimat bekleniyor",
+        stage_names: ["Kontrol", "Teslim", "Bekleme", "Daldırma"],
+        vol: "HACİM:", time_spent: "Geçen süre", current_stage: "Mevcut aşama",
+        sync: "Senkronize ediliyor...", sync_ok: "SYNC:", sync_err: "BAĞLANTI HATASI", no_url: "HATA: URL YOK",
+        time_err: "Tarih hatası", no_data: "Veri yok", d: "g", h: "s", m: "d",
+        summary_table: "Panel Özet Tablosu", th_segment: "Panel", th_total: "Toplam", th_green: "Tamamlandı", th_blue: "Hazır", th_orange: "Teslim", th_red: "Kontrol"
+      }
+    };
+
+    function t(key) { return i18n[currentLang][key] || i18n['ru'][key]; }
+
+    function setLang(lang) {
+      currentLang = lang;
+      document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        if (el.placeholder) el.placeholder = t(el.getAttribute('data-i18n'));
+        else el.innerText = t(el.getAttribute('data-i18n'));
+      });
+      if (segmentsData.length > 0) renderDashboard();
+    }
+
+    function getCageStatusData(stage) {
+      if (stage === 0) return { color: '#475569', textKey: 'legend_gray_cage' };
+      if (stage === 1) return { color: '#ef4444', textKey: 'legend_red' };
+      if (stage === 2) return { color: '#f59e0b', textKey: 'legend_orange' };
+      if (stage === 3) return { color: '#38bdf8', textKey: 'legend_blue' };
+      if (stage >= 4) return { color: '#10b981', textKey: 'legend_green' };
+      return { color: '#475569', textKey: 'legend_gray_cage' };
+    }
+
+    Chart.defaults.color = '#64748b';
+    Chart.defaults.font.family = "'Segoe UI', Roboto, sans-serif";
+    Chart.defaults.borderColor = 'rgba(51, 65, 85, 0.5)';
+
+    function switchTab(tabId, ev) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-tab').forEach(btn => btn.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+
+      if (ev && ev.target) {
+        let targetBtn = ev.target.closest('.nav-tab');
+        if (targetBtn) targetBtn.classList.add('active');
+      }
+    }
+
+    function getColorForType(type) {
+      if (type === 'КП-1') return '#38bdf8';
+      if (type === 'КП-2') return '#c084fc';
+      if (type === 'КП-3') return '#f472b6';
+      return '#cbd5e1';
+    }
+
+    function parseFrontendDate(dateStr) {
+      if (!dateStr) return null;
+      if (typeof dateStr === 'string' && dateStr.includes('T')) {
+        const d = new Date(dateStr);
+        return isNaN(d.getTime()) ? null : d;
+      }
+      if (typeof dateStr === 'string') {
+        const match = dateStr.match(/(\d{2})\.(\d{2})\.(\d{4})/);
+        if (match) {
+          const day = parseInt(match[1], 10);
+          const month = parseInt(match[2], 10) - 1;
+          const year = parseInt(match[3], 10);
+          const d = new Date(year, month, day);
+          return isNaN(d.getTime()) ? null : d;
+        }
+      }
+      const d = new Date(dateStr);
+      return isNaN(d.getTime()) ? null : d;
+    }
+
+    function formatTimeDiff(start, end) {
+      if (!start) return t('no_data');
+
+      const startDate = parseFrontendDate(start);
+      if (!startDate) return t('no_data');
+
+      let endDate = new Date();
+      if (end) {
+        const parsedEnd = parseFrontendDate(end);
+        if (parsedEnd) endDate = parsedEnd;
+      }
+
+      const diffMs = endDate - startDate;
+      if (diffMs < 0) return "0" + t('h');
+
+      const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+      const diffHrs = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+
+      if (diffDays > 0) return `${diffDays}${t('d')} ${diffHrs}${t('h')}`;
+      return `${diffHrs}${t('h')} ${diffMins}${t('m')}`;
+    }
+
+    function openModal(index) {
+      const segment = segmentsData[index];
+      const modal = document.getElementById('segmentModal');
+      document.getElementById('modal-title').innerText = `${t('tab_details').split(' ')[0]}: ${segment.name}`;
+
+      let cagesHtml = '';
+      segment.cages.forEach(cage => {
+        const timeStr = cage.currentStage === 0 ? "---" : formatTimeDiff(cage.startTime, cage.endTime);
+        const normalizedStage = cage.currentStage !== undefined ? cage.currentStage : 0;
+        const statusData = getCageStatusData(normalizedStage);
+
+        let blinkerHtml = normalizedStage > 0 && normalizedStage < 4
+          ? `<div class="status-dot-blinking" style="width: 8px; height: 8px; background: ${statusData.color}; color: ${statusData.color};"></div>`
+          : `<div style="width: 8px; height: 8px; background: ${statusData.color}; border-radius: 50%;"></div>`;
+
+        let displayId = cage.id ? '№' + cage.id : 'Б/Н';
+
+        cagesHtml += `
+            <div class="modal-cage">
+                <div class="m-cage-top">
+                    <div style="display: flex; gap: 15px; align-items: center;">
+                        <span class="cage-id">${displayId}</span>
+                        <span class="cage-type" style="background-color: ${getColorForType(cage.type)}">${cage.type}</span>
+                    </div>
+                    <div style="color: ${statusData.color}; font-size: 11px; font-weight: bold; display: flex; align-items: center; gap: 6px;">
+                        ${blinkerHtml}
+                        ${t(statusData.textKey).toUpperCase()}
+                    </div>
+                </div>
+                <div class="m-cage-grid">
+                    <div class="m-data-point"><span class="m-data-label">${t('current_stage')}</span><span class="m-data-value" style="color: ${statusData.color}; font-weight:600;">${t(statusData.textKey)}</span></div>
+                    <div class="m-data-point"><span class="m-data-label">${t('time_spent')}</span><span class="m-data-value m-time">⏱ ${timeStr}</span></div>
+                </div>
+            </div>`;
+      });
+      document.getElementById('modal-body').innerHTML = cagesHtml;
+      modal.classList.add('active');
+    }
+
+    function closeModal(event) {
+      if (event && event.target !== event.currentTarget) return;
+      document.getElementById('segmentModal').classList.remove('active');
+    }
+    document.addEventListener('keydown', e => { if (e.key === "Escape") closeModal(); });
+
+    function updateCharts(counts, typesCount) {
+      const pieCtx = document.getElementById('statusPieChart').getContext('2d');
+      if (pieChartInstance) pieChartInstance.destroy();
+      pieChartInstance = new Chart(pieCtx, {
+        type: 'doughnut',
+        data: {
+          labels: [t('legend_green'), t('legend_blue'), t('legend_orange'), t('legend_red')],
+          datasets: [{
+            data: [counts.green, counts.blue, counts.orange, counts.red],
+            backgroundColor: ['#10b981', '#38bdf8', '#f59e0b', '#ef4444'],
+            borderWidth: 2, borderColor: '#0f172a', hoverOffset: 4
+          }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { padding: 20, color: '#94a3b8', usePointStyle: true, font: { family: "'Segoe UI', sans-serif" } } } }, cutout: '75%' }
+      });
+
+      const barCtx = document.getElementById('typeBarChart').getContext('2d');
+      if (barChartInstance) barChartInstance.destroy();
+      barChartInstance = new Chart(barCtx, {
+        type: 'bar',
+        data: {
+          labels: ['КП-1', 'КП-2', 'КП-3'],
+          datasets: [{
+            data: [typesCount['КП-1'] || 0, typesCount['КП-2'] || 0, typesCount['КП-3'] || 0],
+            backgroundColor: ['#38bdf8', '#c084fc', '#f472b6'], borderRadius: 2, barThickness: 30
+          }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } }, x: { grid: { display: false } } } }
+      });
+    }
+
+    // НОВАЯ ФУНКЦИЯ ДЛЯ БЕЗОПАСНЫХ КЛИКОВ НА ТЕЛЕФОНЕ
+    function bindPinEvents(pinElement, dataIndex) {
+      let touchHandled = false;
+
+      // Предотвращаем срабатывание panzoom
+      pinElement.addEventListener('touchstart', (e) => {
+        e.stopPropagation();
+      }, { passive: false });
+
+      // Безопасное открытие на мобильных
+      pinElement.addEventListener('touchend', (e) => {
+        e.stopPropagation();
+        e.preventDefault(); // Предотвращаем ghost-click
+        touchHandled = true;
+        openModal(dataIndex);
+        setTimeout(() => touchHandled = false, 300);
+      }, { passive: false });
+
+      // Открытие на ПК
+      pinElement.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (!touchHandled) {
+          openModal(dataIndex);
+        }
+      });
+    }
+
+    function renderMap() {
+      const mapContainer = document.getElementById('project-map-container');
+      mapContainer.querySelectorAll('.pin').forEach(p => p.remove());
+
+      for (let key in mapCoordinates) {
+        const coords = mapCoordinates[key];
+        const orderIndex = segmentOrder.indexOf(key);
+        const orderNum = orderIndex !== -1 ? orderIndex + 1 : '?';
+
+        const pin = document.createElement('div');
+        pin.className = 'pin inactive';
+        pin.id = 'map-pin-' + key.replace(/\./g, '-');
+        pin.style.left = coords.x + '%';
+        pin.style.top = coords.y + '%';
+        pin.innerText = orderNum;
+
+        const tooltip = document.createElement('div');
+        tooltip.className = 'tooltip';
+        tooltip.innerText = key + " (" + t('legend_gray') + ")";
+        pin.appendChild(tooltip);
+
+        mapContainer.appendChild(pin);
+      }
+
+      segmentsData.forEach((segment, index) => {
+        const pinId = 'map-pin-' + segment.name.replace(/\./g, '-');
+        const pin = document.getElementById(pinId);
+
+        if (pin) {
+          let activeCages = 0;
+          let minStage = 4;
+
+          segment.cages.forEach(cage => {
+            let st = cage.currentStage !== undefined ? cage.currentStage : 0;
+            if (st > 0) {
+              activeCages++;
+              if (st < minStage) minStage = st;
+            }
+          });
+
+          if (activeCages > 0) {
+            const statusData = getCageStatusData(minStage);
+
+            pin.className = 'pin active';
+            pin.style.backgroundColor = statusData.color;
+            pin.style.borderColor = statusData.color;
+            pin.style.color = '#fff';
+
+            const pulse = document.createElement('div');
+            pulse.className = 'pin-pulse';
+            pulse.style.backgroundColor = statusData.color;
+            pin.insertBefore(pulse, pin.firstChild);
+
+            const tooltip = pin.querySelector('.tooltip');
+            if (tooltip) tooltip.innerText = segment.name;
+
+            bindPinEvents(pin, index);
+          } else {
+            pin.style.cursor = 'pointer';
+            bindPinEvents(pin, index);
+          }
+        }
+      });
+    }
+
+    function renderDashboard() {
+      const stageNames = t('stage_names');
+      let counts = { red: 0, orange: 0, blue: 0, green: 0 };
+      let typesCount = { 'КП-1': 0, 'КП-2': 0, 'КП-3': 0 };
+
+      let tableRows = '';
+
+      segmentsData.forEach(seg => {
+        let sGreen = 0, sBlue = 0, sOrange = 0, sRed = 0;
+
+        seg.cages.forEach(cage => {
+          if (cage.type) typesCount[cage.type] = (typesCount[cage.type] || 0) + 1;
+          const st = cage.currentStage !== undefined ? cage.currentStage : 0;
+
+          if (st === 1) { counts.red++; sRed++; }
+          else if (st === 2) { counts.orange++; sOrange++; }
+          else if (st === 3) { counts.blue++; sBlue++; }
+          else if (st >= 4) { counts.green++; sGreen++; }
+        });
+
+        tableRows += `<tr style="border-bottom: 1px solid #1e293b;">
+            <td style="padding: 10px; color: #f8fafc; font-weight: 600;">${seg.name}</td>
+            <td style="padding: 10px; font-weight: 600;">${seg.cages.length}</td>
+            <td style="padding: 10px; color: #10b981; font-weight: 600;">${sGreen}</td>
+            <td style="padding: 10px; color: #38bdf8; font-weight: 600;">${sBlue}</td>
+            <td style="padding: 10px; color: #f59e0b; font-weight: 600;">${sOrange}</td>
+            <td style="padding: 10px; color: #ef4444; font-weight: 600;">${sRed}</td>
+        </tr>`;
+      });
+
+      document.getElementById('kpi-board').innerHTML = `
+          <div class="stat-card" style="border-left-color: #10b981;"><div class="label">${t('legend_green')}</div><div class="value">${counts.green}</div></div>
+          <div class="stat-card" style="border-left-color: #38bdf8;"><div class="label">${t('legend_blue')}</div><div class="value">${counts.blue}</div></div>
+          <div class="stat-card" style="border-left-color: #f59e0b;"><div class="label">${t('legend_orange')}</div><div class="value">${counts.orange}</div></div>
+          <div class="stat-card" style="border-left-color: #ef4444;"><div class="label">${t('legend_red')}</div><div class="value">${counts.red}</div></div>
+      `;
+
+      updateCharts(counts, typesCount);
+      document.getElementById('summary-tbody').innerHTML = tableRows;
+
+      renderMap();
+
+      const grid = document.getElementById('segments-grid');
+      grid.innerHTML = '';
+      segmentsData.forEach((segment, index) => {
+        let html = `
+            <div class="segment-card" onclick="openModal(${index})">
+                <div class="segment-header">
+                    <div class="segment-title">${segment.name}</div>
+                    <div class="segment-count">${t('vol')} ${segment.cages.length}</div>
+                </div>`;
+
+        segment.cages.forEach(cage => {
+          let normalizedStage = cage.currentStage !== undefined ? cage.currentStage : 0;
+          if (normalizedStage > 4) normalizedStage = 4;
+          const statusData = getCageStatusData(normalizedStage);
+          const progressWidth = normalizedStage > 0 ? ((normalizedStage - 1) / 3) * 100 : 0;
+
+          let stagesHtml = '';
+          stageNames.forEach((sName, i) => {
+            let classes = 'stage-step';
+            let dotStyle = '';
+            let labelHtml = '';
+
+            if (normalizedStage === i + 1) {
+              classes += ' active';
+              dotStyle = `border-color: ${statusData.color}; background: ${statusData.color}; animation: soft-glow 2s infinite alternate;`;
+              labelHtml = `<div class="stage-label" style="color: ${statusData.color}; font-weight: bold;">S${i + 1}</div>`;
+            }
+            else if (normalizedStage > i + 1) {
+              classes += ' completed';
+              dotStyle = `border-color: #10b981; background: #10b981;`;
+            }
+
+            stagesHtml += `<div class="${classes}" title="${sName}"><div class="stage-dot" style="${dotStyle}"></div>${labelHtml}</div>`;
+          });
+
+          let blinkerHtml = normalizedStage > 0 && normalizedStage < 4
+            ? `<div class="status-dot-blinking" style="width: 8px; height: 8px; background: ${statusData.color}; color: ${statusData.color};"></div>`
+            : `<div style="width: 8px; height: 8px; background: ${statusData.color}; border-radius: 50%;"></div>`;
+
+          let displayId = cage.id ? '№' + cage.id : 'Б/Н';
+
+          html += `
+                <div class="cage-item">
+                    <div class="cage-header">
+                        <div><span class="cage-id">${displayId}</span><span class="cage-type" style="background-color: ${getColorForType(cage.type)}">${cage.type}</span></div>
+                        <div class="cage-status" style="color: ${statusData.color};">
+                            ${blinkerHtml}
+                            ${t(statusData.textKey).toUpperCase()}
+                        </div>
+                    </div>
+                    <div class="stages-container">
+                        <div class="stages-line"></div>
+                        <div class="stages-fill" style="width: ${progressWidth}%; background: ${statusData.color};"></div>
+                        <div class="stages-dots">${stagesHtml}</div>
+                    </div>
+                    <div style="height: 10px;"></div> 
+                    <div style="text-align: center; font-size: 11px; color: ${statusData.color}; font-weight: 600;">
+                        ${t(statusData.textKey)}
+                    </div>
+                </div>`;
+        });
+        grid.innerHTML += html + `</div>`;
+      });
+    }
+
+    async function loadData() {
+      const statusBlinker = document.getElementById('status-blinker');
+      const statusText = document.getElementById('last-update-text');
+      const refreshBtn = document.getElementById('refresh-btn');
+
+      refreshBtn.querySelector('svg').classList.add('spin');
+
+      try {
+        if (GAS_URL === "ВСТАВЬТЕ_ВАШУ_ССЫЛКУ_EXEC_СЮДА") {
+          statusText.innerText = t('no_url');
+          statusBlinker.style.color = "#ef4444";
+          return;
+        }
+
+        const url = `${GAS_URL}?action=getData`;
+        const response = await fetch(url);
+        segmentsData = await response.json();
+        renderDashboard();
+
+        const now = new Date();
+        statusText.innerText = `${t('sync_ok')} ${now.toLocaleTimeString()}`;
+        statusBlinker.style.color = "#34d399";
+      } catch (error) {
+        console.error("Ошибка:", error);
+        statusText.innerText = t('sync_err');
+        statusBlinker.style.color = "#ef4444";
+      } finally {
+        setTimeout(() => refreshBtn.querySelector('svg').classList.remove('spin'), 500);
+      }
+    }
+
+    checkAuth();
+  </script>
+</body>
+
+</html>
