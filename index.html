@@ -869,7 +869,7 @@
     }
 
     /* Сертификация (Приёмка) */
-    .acc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 15px; }
+    .acc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 15px; align-items: start; }
     .acc-card { background: rgba(30, 41, 59, 0.4); border: 1px solid #334155; border-radius: 6px; cursor: pointer; transition: 0.2s; overflow: hidden; }
     .acc-card:hover { background: rgba(30, 41, 59, 0.7); }
     .acc-header { display: flex; justify-content: space-between; padding: 15px; user-select: none; }
@@ -1361,7 +1361,7 @@
         profile_title: "Личный кабинет", prof_fio: "ФИО Сотрудника", prof_email: "E-mail", prof_company: "Компания", prof_role: "Должность",
         change_pass_title: "Безопасность (Смена пароля)", save_pass_btn: "ОБНОВИТЬ ПАРОЛЬ", pass_match_err: "Новые пароли не совпадают!", pass_changed_ok: "Пароль успешно обновлен!",
         chart_status: "Распределение статусов", chart_type: "Номенклатура",
-        legend_red: "Не прошёл входной контроль", legend_orange: "В процессе сдачи", legend_blue: "Готов к погружению", legend_green: "Завершён", legend_gray: "В плане / Нет данных",
+        legend_red: "Ожидает контроля", legend_orange: "В процессе сдачи", legend_blue: "Готов к погружению", legend_green: "Завершен", legend_gray: "В плане",
         legend_gray_cage: "Ожидается поставка",
         tab_acceptance: "ПРИЁМКА", acc_approve: "ПРИНЯТО", acc_remark: "ЗАМЕЧАНИЯ",
         remark_title: "Замечания по каркасу", remark_history: "История замечаний:", remark_submit: "Отправить",
@@ -1379,12 +1379,15 @@
         profile_title: "Personal Account", prof_fio: "Full Name", prof_email: "E-mail", prof_company: "Company", prof_role: "Position",
         change_pass_title: "Security (Change Password)", save_pass_btn: "UPDATE PASSWORD", pass_match_err: "New passwords do not match!", pass_changed_ok: "Password updated successfully!",
         chart_status: "Status Distribution", chart_type: "Nomenclature",
-        legend_red: "Failed/Awaiting Inspection", legend_orange: "Handover in Progress", legend_blue: "Ready for Submersion", legend_green: "Completed", legend_gray: "Planned / No data",
+        legend_red: "Awaiting Inspection", legend_orange: "Handover in Progress", legend_blue: "Ready for Submersion", legend_green: "Completed", legend_gray: "Planned",
         legend_gray_cage: "Delivery expected",
         tab_acceptance: "ACCEPTANCE", acc_approve: "APPROVED", acc_remark: "REMARKS",
         remark_title: "Cage Remarks", remark_history: "Remark History:", remark_submit: "Submit",
         acc_empty: "No active cages in inspection/handover stages",
         stage_names: ["Inspection", "Handover", "Awaiting", "Submersion"],
+        stage1_title: "Incoming Inspection", stage1_desc: "Geometry check, 3 sides of the cage, couplers included",
+        stage2_title: "Docking", stage2_desc: "Tightening couplers, welding angles",
+        stage3_title: "Lower part", stage3_desc: "Inspection of the bottom of the cage",
         vol: "VOL:", time_spent: "Time spent", current_stage: "Current stage",
         sync: "Syncing...", sync_ok: "SYNC:", sync_err: "CONNECTION ERROR", no_url: "ERROR: NO URL",
         time_err: "Date error", no_data: "No data", d: "d", h: "h", m: "m",
@@ -1397,12 +1400,15 @@
         profile_title: "Kişisel Hesap", prof_fio: "Adı Soyadı", prof_email: "E-mail", prof_company: "Firma / Şirket", prof_role: "Görevi",
         change_pass_title: "Güvenlik (Şifre Değiştir)", save_pass_btn: "ŞİFREYİ GÜNCELLE", pass_match_err: "Yeni şifreler eşleşmiyor!", pass_changed_ok: "Şifre başarıyla güncellendi!",
         chart_status: "Durum Dağılımı", chart_type: "İsimlendirme",
-        legend_red: "Kontrol Bekliyor/Başarısız", legend_orange: "Teslim Sürecinde", legend_blue: "Daldırmaya Hazır", legend_green: "Tamamlandı", legend_gray: "Planlanmış / Veri yok",
+        legend_red: "Kontrol Bekliyor", legend_orange: "Teslim Sürecinde", legend_blue: "Daldırmaya Hazır", legend_green: "Tamamlandı", legend_gray: "Planlanmış",
         legend_gray_cage: "Teslimat bekleniyor",
         tab_acceptance: "KABUL", acc_approve: "ONAYLANDI", acc_remark: "AÇIKLAMALAR",
         remark_title: "Kafes Açıklamaları", remark_history: "Açıklama Geçmişi:", remark_submit: "Gönder",
         acc_empty: "Kontrol/teslim aşamasında aktif kafes yok",
         stage_names: ["Kontrol", "Teslim", "Bekleme", "Daldırma"],
+        stage1_title: "Giriş kontrolü", stage1_desc: "Geometri kontrolü, kafesin 3 tarafı, manşonlar dahil",
+        stage2_title: "Ekleme", stage2_desc: "Manşonların sıkılması, köşebentlerin kaynaklanması",
+        stage3_title: "Alt kısım", stage3_desc: "Kafesin alt kısmının kontrolü",
         vol: "HACİM:", time_spent: "Geçen süre", current_stage: "Mevcut aşama",
         sync: "Senkronize ediliyor...", sync_ok: "SYNC:", sync_err: "BAĞLANTI HATASI", no_url: "HATA: URL YOK",
         time_err: "Tarih hatası", no_data: "Veri yok", d: "g", h: "s", m: "d",
@@ -1761,9 +1767,9 @@
 
              let stagesHtml = '';
              let acc = cage.acceptances || { stage1:{}, stage2:{}, stage3:{} };
-             stagesHtml += renderStageBlock(1, "Входной контроль", "Осмотр геометрии, 3 стороны каркаса, муфты в комплекте", acc.stage1 || {});
-             stagesHtml += renderStageBlock(2, "Стыковка", "Затяжка муфт, сварка уголков", acc.stage2 || {});
-             stagesHtml += renderStageBlock(3, "Нижняя часть", "Осмотр низа каркаса", acc.stage3 || {});
+             stagesHtml += renderStageBlock(1, t('stage1_title'), t('stage1_desc'), acc.stage1 || {});
+             stagesHtml += renderStageBlock(2, t('stage2_title'), t('stage2_desc'), acc.stage2 || {});
+             stagesHtml += renderStageBlock(3, t('stage3_title'), t('stage3_desc'), acc.stage3 || {});
 
              let statusData = getCageStatusData(st);
              let html = `
