@@ -870,8 +870,10 @@
 
     /* Сертификация (Приёмка) */
     .acc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 15px; }
-    .acc-card { background: rgba(30, 41, 59, 0.4); border: 1px solid #334155; border-radius: 6px; padding: 15px; }
-    .acc-header { display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px dashed #334155; padding-bottom: 10px; }
+    .acc-card { background: rgba(30, 41, 59, 0.4); border: 1px solid #334155; border-radius: 6px; cursor: pointer; transition: 0.2s; overflow: hidden; }
+    .acc-card:hover { background: rgba(30, 41, 59, 0.7); }
+    .acc-header { display: flex; justify-content: space-between; padding: 15px; user-select: none; }
+    .acc-body { padding: 15px; padding-top: 5px; cursor: default; }
     .acc-title { font-weight: 700; color: #f8fafc; font-size: 15px; }
     .company-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(51, 65, 85, 0.3); }
     .company-row:last-child { border-bottom: none; }
@@ -1678,6 +1680,20 @@
 
     let currentRemarkCage = null;
 
+    window.toggleCard = function(cardEl) {
+       let body = cardEl.querySelector('.acc-body');
+       let icon = cardEl.querySelector('.expand-icon');
+       if (body.style.display === 'none') {
+          body.style.display = 'block';
+          icon.style.transform = 'rotate(90deg)';
+          cardEl.style.background = 'rgba(30, 41, 59, 0.8)';
+       } else {
+          body.style.display = 'none';
+          icon.style.transform = 'rotate(0deg)';
+          cardEl.style.background = '';
+       }
+    }
+
     function renderAcceptancePage() {
       const container = document.getElementById('acc-grid-container');
       if (!container) return;
@@ -1692,59 +1708,75 @@
           let st = cage.currentStage !== undefined ? cage.currentStage : 0;
           if (st === 1 || st === 2) {
              hasCages = true;
-             
              let displayId = cage.id ? '№' + cage.id : 'Б/Н';
-             let acc = cage.acceptances || { kasktas:{approved:false,remark:""}, rencons:{approved:false,remark:""}, sinergiya:{approved:false,remark:""} };
              
-             const companies = [
-                { id: 'Kasktaş', name: 'Kasktaş', data: acc.kasktas },
-                { id: 'Rencons', name: 'Rencons', data: acc.rencons },
-                { id: 'Sinergiya', name: 'Sinergiya', data: acc.sinergiya }
-             ];
+             function renderStageBlock(stageId, stageTitle, stageDesc, companiesData) {
+                const companies = [
+                   { id: 'Kasktaş', name: 'Kasktaş', data: companiesData.kasktas || {approved:false,remark:""} },
+                   { id: 'Rencons', name: 'Rencons', data: companiesData.rencons || {approved:false,remark:""} },
+                   { id: 'Sinergiya', name: 'Sinergiya', data: companiesData.sinergiya || {approved:false,remark:""} }
+                ];
 
-             let compHtml = '';
-             companies.forEach(comp => {
-                let isMyCompany = (comp.id === userCompany);
-                let hasRights = isMyCompany && userCanApprove;
-                let btnApproveClass = comp.data.approved ? "btn-approve active" : "btn-approve";
-                let btnApproveText = comp.data.approved ? "✔ " + t('acc_approve') : t('acc_approve');
-                let remarkClass = comp.data.remark ? "btn-remark has-remark" : "btn-remark";
-                let btnRemarkText = comp.data.remark ? "❗ " + t('acc_remark') : t('acc_remark');
-                
-                let infoHtml = comp.data.approved && comp.data.info ? `<div style="font-size: 10px; color: #10b981; margin-top: 6px; font-weight: 600; text-align: right; letter-spacing: 0.3px;">${comp.data.info}</div>` : '';
-                
-                // Извлекаем последнюю строку замечания для превью
-                let remarkPreview = '';
-                if (comp.data.remark) {
-                   let lines = comp.data.remark.split('\\n');
-                   let lastLine = lines[lines.length - 1];
-                   remarkPreview = `<div style="font-size: 10px; color: #fde68a; margin-top: 6px; padding: 4px 6px; background: rgba(245, 158, 11, 0.15); border-radius: 4px; border-left: 2px solid #f59e0b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="Нажмите 'Замечания', чтобы прочитать полностью">💬 ${lastLine}</div>`;
-                }
-                
-                compHtml += `
-                  <div class="company-row" style="flex-direction: column; align-items: stretch;">
-                     <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                        <div class="comp-name">${comp.name}</div>
-                        <div class="comp-actions">
-                           <button class="${btnApproveClass}" ${!hasRights ? 'disabled' : ''} onclick="handleAcceptanceAction('${segment.name}', '${cage.id}', '${comp.id}', ${comp.data.approved ? "'unapprove'" : "'approve'"})">${btnApproveText}</button>
-                           <button class="${remarkClass}" ${(!hasRights && !comp.data.remark) ? 'disabled' : ''} onclick="openRemarkModal('${segment.name}', '${cage.id}', '${comp.id}')">${btnRemarkText}</button>
+                let compHtml = '';
+                companies.forEach(comp => {
+                   let isMyCompany = (comp.id === userCompany);
+                   let hasRights = isMyCompany && userCanApprove;
+                   let btnApproveClass = comp.data.approved ? "btn-approve active" : "btn-approve";
+                   let btnApproveText = comp.data.approved ? "✔ " + t('acc_approve') : t('acc_approve');
+                   let remarkClass = comp.data.remark ? "btn-remark has-remark" : "btn-remark";
+                   let btnRemarkText = comp.data.remark ? "❗ " + t('acc_remark') : t('acc_remark');
+                   
+                   let infoHtml = comp.data.approved && comp.data.info ? `<div style="font-size: 10px; color: #10b981; margin-top: 4px; font-weight: 600; text-align: right; letter-spacing: 0.3px;">${comp.data.info}</div>` : '';
+                   
+                   let remarkPreview = '';
+                   if (comp.data.remark) {
+                      let lines = comp.data.remark.split('\\n');
+                      let lastLine = lines[lines.length - 1];
+                      remarkPreview = `<div style="font-size: 10px; color: #fde68a; margin-top: 4px; padding: 4px 6px; background: rgba(245, 158, 11, 0.15); border-radius: 4px; border-left: 2px solid #f59e0b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="Нажмите 'Замечания', чтобы прочитать полностью">💬 ${lastLine}</div>`;
+                   }
+                   
+                   compHtml += `
+                     <div class="company-row" style="flex-direction: column; align-items: stretch; padding: 6px 0; border-bottom: 1px dashed rgba(51, 65, 85, 0.3);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                           <div class="comp-name" style="font-size: 12px; width: 70px;">${comp.name}</div>
+                           <div class="comp-actions" style="display: flex; gap: 6px;">
+                              <button class="${btnApproveClass}" ${!hasRights ? 'disabled' : ''} onclick="event.stopPropagation(); handleAcceptanceAction('${segment.name}', '${cage.id}', '${comp.id}', ${comp.data.approved ? "'unapprove'" : "'approve'"}, ${stageId})">${btnApproveText}</button>
+                              <button class="${remarkClass}" ${(!hasRights && !comp.data.remark) ? 'disabled' : ''} onclick="event.stopPropagation(); openRemarkModal('${segment.name}', '${cage.id}', '${comp.id}', ${stageId})">${btnRemarkText}</button>
+                           </div>
                         </div>
+                        ${infoHtml}
+                        ${remarkPreview}
                      </div>
-                     ${infoHtml}
-                     ${remarkPreview}
+                   `;
+                });
+                
+                return `
+                  <div class="stage-block" style="background: rgba(15, 23, 42, 0.4); border-radius: 6px; padding: 10px; margin-bottom: 10px; border: 1px solid #334155;" onclick="event.stopPropagation()">
+                     <div style="font-size: 13px; font-weight: bold; color: #e2e8f0; margin-bottom: 4px;">${stageId}. ${stageTitle}</div>
+                     <div style="font-size: 11px; color: #94a3b8; margin-bottom: 8px;">${stageDesc}</div>
+                     ${compHtml}
                   </div>
                 `;
-             });
+             }
+
+             let stagesHtml = '';
+             let acc = cage.acceptances || { stage1:{}, stage2:{}, stage3:{} };
+             stagesHtml += renderStageBlock(1, "Входной контроль", "Осмотр геометрии, 3 стороны каркаса, муфты в комплекте", acc.stage1 || {});
+             stagesHtml += renderStageBlock(2, "Стыковка", "Затяжка муфт, сварка уголков", acc.stage2 || {});
+             stagesHtml += renderStageBlock(3, "Нижняя часть", "Осмотр низа каркаса", acc.stage3 || {});
 
              let statusData = getCageStatusData(st);
              let html = `
-               <div class="acc-card">
+               <div class="acc-card" onclick="toggleCard(this)">
                   <div class="acc-header">
-                     <div class="acc-title">${segment.name} - ${displayId}</div>
+                     <div class="acc-title">
+                        <span class="expand-icon" style="display: inline-block; transition: transform 0.3s ease; margin-right: 6px;">▶</span>
+                        ${segment.name} - ${displayId}
+                     </div>
                      <div style="font-size:11px; color:${statusData.color}; font-weight:bold;">${t(statusData.textKey).toUpperCase()}</div>
                   </div>
-                  <div>
-                     ${compHtml}
+                  <div class="acc-body" style="display: none;">
+                     ${stagesHtml}
                   </div>
                </div>
              `;
@@ -1758,7 +1790,7 @@
       }
     }
 
-    async function handleAcceptanceAction(segment, cageId, company, actType, remarkText = "") {
+    async function handleAcceptanceAction(segment, cageId, company, actType, stageId, remarkText = "") {
        const btnId = actType === 'remark' ? 'submitRemarkBtn' : null;
        if (btnId) {
           const btn = document.getElementById(btnId);
@@ -1769,7 +1801,7 @@
        const userFio = sessionStorage.getItem('authName') || "Неизвестно";
        
        try {
-          const url = `${GAS_URL}?action=updateAcceptance&segment=${encodeURIComponent(segment)}&cageId=${encodeURIComponent(cageId)}&company=${encodeURIComponent(company)}&actType=${actType}&remark=${encodeURIComponent(remarkText)}&userFio=${encodeURIComponent(userFio)}`;
+          const url = `${GAS_URL}?action=updateAcceptance&segment=${encodeURIComponent(segment)}&cageId=${encodeURIComponent(cageId)}&company=${encodeURIComponent(company)}&actType=${actType}&stageId=${stageId}&remark=${encodeURIComponent(remarkText)}&userFio=${encodeURIComponent(userFio)}`;
           const response = await fetch(url);
           const result = await response.json();
           if (result.success) {
@@ -1837,7 +1869,7 @@
        if (!currentRemarkCage) return;
        const text = document.getElementById('new-remark-text').value.trim();
        if (!text) return;
-       handleAcceptanceAction(currentRemarkCage.segment, currentRemarkCage.cageId, currentRemarkCage.company, 'remark', text);
+       handleAcceptanceAction(currentRemarkCage.segment, currentRemarkCage.cageId, currentRemarkCage.company, 'remark', currentRemarkCage.stageId, text);
     }
 
     function renderDashboard() {
