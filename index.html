@@ -869,8 +869,8 @@
     }
 
     /* Сертификация (Приёмка) */
-    .acc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 15px; align-items: start; }
-    .acc-card { background: rgba(30, 41, 59, 0.4); border: 1px solid #334155; border-radius: 6px; cursor: pointer; transition: 0.2s; overflow: hidden; }
+    .acc-grid { column-width: 340px; column-gap: 15px; }
+    .acc-card { background: rgba(30, 41, 59, 0.4); border: 1px solid #334155; border-radius: 6px; cursor: pointer; transition: 0.2s; overflow: hidden; break-inside: avoid; margin-bottom: 15px; display: inline-block; width: 100%; box-sizing: border-box; }
     .acc-card:hover { background: rgba(30, 41, 59, 0.7); }
     .acc-header { display: flex; justify-content: space-between; padding: 15px; user-select: none; }
     .acc-body { padding: 15px; padding-top: 5px; cursor: default; }
@@ -1367,6 +1367,9 @@
         remark_title: "Замечания по каркасу", remark_history: "История замечаний:", remark_submit: "Отправить",
         acc_empty: "Нет активных каркасов на этапах Контроль/Сдача",
         stage_names: ["Входной контроль", "Сдача", "Ожидание", "Погружение"],
+        stage1_title: "Входной контроль", stage1_desc: "Осмотр геометрии, 3 стороны каркаса, муфты в комплекте",
+        stage2_title: "Стыковка", stage2_desc: "Затяжка муфт, сварка уголков",
+        stage3_title: "Нижняя часть", stage3_desc: "Осмотр низа каркаса",
         vol: "КАРКАСОВ:", time_spent: "Затрачено времени", current_stage: "Теку этап",
         sync: "Синхронизация...", sync_ok: "SYNC:", sync_err: "СБОЙ СВЯЗИ", no_url: "ОШИБКА: НЕТ URL",
         time_err: "Ошибка дат", no_data: "Нет данных", d: "д", h: "ч", m: "м",
