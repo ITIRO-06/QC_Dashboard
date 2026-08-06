@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Мониторинг: Стена в грунте</title>
-  <link rel="icon" href="logo_mini.JPG">
+  <link rel="icon" href="logo_mini.jpg">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://unpkg.com/panzoom@9.4.0/dist/panzoom.min.js"></script>
   <style>
@@ -600,11 +600,27 @@
       opacity: 1;
     }
 
-        .pin:hover .tooltip { visibility: visible; opacity: 1; }
-        .legend-panel { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px; background: rgba(30, 41, 59, 0.4); padding: 12px 15px; border-radius: 6px; border: 1px solid #334155; }
-        .filter-btn:hover { background: rgba(255,255,255,0.05) !important; }
-        
-        /* Сетка захваток */
+    .pin:hover .tooltip {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .legend-panel {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+      background: rgba(30, 41, 59, 0.4);
+      padding: 12px 15px;
+      border-radius: 6px;
+      border: 1px solid #334155;
+    }
+
+    .filter-btn:hover {
+      background: rgba(255, 255, 255, 0.05) !important;
+    }
+
+    /* Сетка захваток */
     .grid-container {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
@@ -870,28 +886,155 @@
     }
 
     /* Сертификация (Приёмка) */
-    .acc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 15px; align-items: start; }
-    .acc-card { background: rgba(30, 41, 59, 0.4); border: 1px solid #334155; border-radius: 6px; cursor: pointer; transition: 0.2s; overflow: hidden; }
-    .acc-card:hover { background: rgba(30, 41, 59, 0.7); }
-    .acc-header { display: flex; justify-content: space-between; padding: 15px; user-select: none; }
-    .acc-body { padding: 15px; padding-top: 5px; cursor: default; }
-    .acc-title { font-weight: 700; color: #f8fafc; font-size: 15px; }
-    .company-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(51, 65, 85, 0.3); }
-    .company-row:last-child { border-bottom: none; }
-    .comp-name { font-size: 13px; font-weight: 600; color: #94a3b8; width: 80px; }
-    .comp-actions { display: flex; gap: 8px; align-items: center; }
-    .btn-approve { background: transparent; border: 1px solid #10b981; color: #10b981; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; transition: 0.2s; }
-    .btn-approve:hover:not(:disabled) { background: #10b981; color: #fff; }
-    .btn-approve.active { background: #10b981; color: #fff; }
-    .btn-approve:disabled { opacity: 0.3; cursor: not-allowed; border-color: #64748b; color: #64748b; }
-    
-    .btn-remark { background: transparent; border: 1px solid #f59e0b; color: #f59e0b; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; transition: 0.2s; }
-    .btn-remark:hover:not(:disabled) { background: #f59e0b; color: #fff; }
-    .btn-remark.has-remark { background: #f59e0b; color: #fff; box-shadow: 0 0 8px rgba(245, 158, 11, 0.6); border-color: #f59e0b; }
-    .btn-remark:disabled { opacity: 0.3; cursor: not-allowed; border-color: #64748b; color: #64748b; }
+    .acc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 15px;
+      align-items: start;
+    }
 
-    #remarkModal textarea { width: 100%; background: #0f172a; border: 1px solid #334155; color: #f8fafc; padding: 10px; border-radius: 6px; resize: vertical; min-height: 80px; margin-top: 10px; font-family: inherit;}
-    .remark-history { background: #0f172a; padding: 10px; border-radius: 6px; font-size: 12px; color: #cbd5e1; max-height: 150px; overflow-y: auto; white-space: pre-wrap; margin-bottom: 10px; border: 1px solid #1e293b; }
+    .acc-card {
+      background: rgba(30, 41, 59, 0.4);
+      border: 1px solid #334155;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.2s;
+      overflow: hidden;
+    }
+
+    .acc-card:hover {
+      background: rgba(30, 41, 59, 0.7);
+    }
+
+    .acc-header {
+      display: flex;
+      justify-content: space-between;
+      padding: 15px;
+      user-select: none;
+    }
+
+    .acc-body {
+      padding: 15px;
+      padding-top: 5px;
+      cursor: default;
+    }
+
+    .acc-title {
+      font-weight: 700;
+      color: #f8fafc;
+      font-size: 15px;
+    }
+
+    .company-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(51, 65, 85, 0.3);
+    }
+
+    .company-row:last-child {
+      border-bottom: none;
+    }
+
+    .comp-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: #94a3b8;
+      width: 80px;
+    }
+
+    .comp-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .btn-approve {
+      background: transparent;
+      border: 1px solid #10b981;
+      color: #10b981;
+      padding: 4px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+
+    .btn-approve:hover:not(:disabled) {
+      background: #10b981;
+      color: #fff;
+    }
+
+    .btn-approve.active {
+      background: #10b981;
+      color: #fff;
+    }
+
+    .btn-approve:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      border-color: #64748b;
+      color: #64748b;
+    }
+
+    .btn-remark {
+      background: transparent;
+      border: 1px solid #f59e0b;
+      color: #f59e0b;
+      padding: 4px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+
+    .btn-remark:hover:not(:disabled) {
+      background: #f59e0b;
+      color: #fff;
+    }
+
+    .btn-remark.has-remark {
+      background: #f59e0b;
+      color: #fff;
+      box-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
+      border-color: #f59e0b;
+    }
+
+    .btn-remark:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      border-color: #64748b;
+      color: #64748b;
+    }
+
+    #remarkModal textarea {
+      width: 100%;
+      background: #0f172a;
+      border: 1px solid #334155;
+      color: #f8fafc;
+      padding: 10px;
+      border-radius: 6px;
+      resize: vertical;
+      min-height: 80px;
+      margin-top: 10px;
+      font-family: inherit;
+    }
+
+    .remark-history {
+      background: #0f172a;
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      color: #cbd5e1;
+      max-height: 150px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      margin-bottom: 10px;
+      border: 1px solid #1e293b;
+    }
   </style>
 </head>
 
@@ -923,7 +1066,7 @@
       </div>
 
       <div class="header-right">
-        <div class="dev-block" data-i18n="dev">DEVELOPER: Kunarov Damir</div>
+
         <div class="controls-panel">
           <div class="lang-switcher">
             <button class="lang-btn active" onclick="setLang('ru')">RU</button>
@@ -963,7 +1106,7 @@
       <div class="nav-tab active" onclick="switchTab('analytics', event)" data-i18n="tab_analytics">АНАЛИТИКА</div>
       <div class="nav-tab" onclick="switchTab('map', event)" data-i18n="tab_map">КАРТА ПРОЕКТА</div>
       <div class="nav-tab" onclick="switchTab('details', event)" data-i18n="tab_details">ОБЪЕКТЫ (ЗАХВАТКИ)</div>
-      <div class="nav-tab" onclick="switchTab('acceptance', event)" data-i18n="tab_acceptance">ПРИЁМКА</div>
+
     </div>
 
     <div class="content">
@@ -1042,34 +1185,41 @@
       <!-- Захватки -->
       <div id="details" class="page">
         <div class="legend-panel">
-          <div class="filter-btn" id="filter-btn-0" onclick="toggleFilter(0)" style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 4px 8px; border-radius: 4px; transition: 0.2s;">
+          <div class="filter-btn" id="filter-btn-0" onclick="toggleFilter(0)"
+            style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 4px 8px; border-radius: 4px; transition: 0.2s;">
             <div style="width: 10px; height: 10px; background: #475569; border-radius: 50%;"></div>
-            <span data-i18n="legend_gray" style="font-size: 11px; color: #cbd5e1; font-weight: 600;">В плане / Нет данных</span>
+            <span data-i18n="legend_gray" style="font-size: 11px; color: #cbd5e1; font-weight: 600;">В плане / Нет
+              данных</span>
           </div>
-          <div class="filter-btn" id="filter-btn-1" onclick="toggleFilter(1)" style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 4px 8px; border-radius: 4px; transition: 0.2s;">
-            <div class="status-dot-blinking" style="width: 10px; height: 10px; background: #ef4444; color: #ef4444;"></div>
+          <div class="filter-btn" id="filter-btn-1" onclick="toggleFilter(1)"
+            style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 4px 8px; border-radius: 4px; transition: 0.2s;">
+            <div class="status-dot-blinking" style="width: 10px; height: 10px; background: #ef4444; color: #ef4444;">
+            </div>
             <span data-i18n="legend_red" style="font-size: 11px; color: #cbd5e1; font-weight: 600;"></span>
           </div>
-          <div class="filter-btn" id="filter-btn-2" onclick="toggleFilter(2)" style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 4px 8px; border-radius: 4px; transition: 0.2s;">
-            <div class="status-dot-blinking" style="width: 10px; height: 10px; background: #f59e0b; color: #f59e0b;"></div>
+          <div class="filter-btn" id="filter-btn-2" onclick="toggleFilter(2)"
+            style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 4px 8px; border-radius: 4px; transition: 0.2s;">
+            <div class="status-dot-blinking" style="width: 10px; height: 10px; background: #f59e0b; color: #f59e0b;">
+            </div>
             <span data-i18n="legend_orange" style="font-size: 11px; color: #cbd5e1; font-weight: 600;"></span>
           </div>
-          <div class="filter-btn" id="filter-btn-3" onclick="toggleFilter(3)" style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 4px 8px; border-radius: 4px; transition: 0.2s;">
-            <div class="status-dot-blinking" style="width: 10px; height: 10px; background: #38bdf8; color: #38bdf8;"></div>
+          <div class="filter-btn" id="filter-btn-3" onclick="toggleFilter(3)"
+            style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 4px 8px; border-radius: 4px; transition: 0.2s;">
+            <div class="status-dot-blinking" style="width: 10px; height: 10px; background: #38bdf8; color: #38bdf8;">
+            </div>
             <span data-i18n="legend_blue" style="font-size: 11px; color: #cbd5e1; font-weight: 600;"></span>
           </div>
-          <div class="filter-btn" id="filter-btn-4" onclick="toggleFilter(4)" style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 4px 8px; border-radius: 4px; transition: 0.2s;">
-            <div class="status-dot-blinking" style="width: 10px; height: 10px; background: #10b981; color: #10b981;"></div>
+          <div class="filter-btn" id="filter-btn-4" onclick="toggleFilter(4)"
+            style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 4px 8px; border-radius: 4px; transition: 0.2s;">
+            <div class="status-dot-blinking" style="width: 10px; height: 10px; background: #10b981; color: #10b981;">
+            </div>
             <span data-i18n="legend_green" style="font-size: 11px; color: #cbd5e1; font-weight: 600;"></span>
           </div>
         </div>
         <div class="grid-container" id="segments-grid"></div>
       </div>
 
-      <!-- Приемка -->
-      <div id="acceptance" class="page">
-         <div class="acc-grid" id="acc-grid-container"></div>
-      </div>
+
 
       <div id="profile" class="page">
         <div
@@ -1140,22 +1290,7 @@
     </div>
   </div>
 
-  <div class="modal-overlay" id="remarkModal" onclick="closeRemarkModal(event)">
-    <div class="modal-box" onclick="event.stopPropagation()">
-      <div class="modal-header">
-        <h2 data-i18n="remark_title">Замечания по каркасу</h2>
-        <button class="modal-close" onclick="closeRemarkModal()">×</button>
-      </div>
-      <div class="modal-body">
-         <div id="remark-history-container" style="display:none;">
-            <div style="font-size: 11px; color: #94a3b8; margin-bottom: 5px; text-transform: uppercase;" data-i18n="remark_history">История замечаний:</div>
-            <div class="remark-history" id="remark-history-text"></div>
-         </div>
-         <textarea id="new-remark-text" placeholder="Введите текст замечания или ответа..."></textarea>
-         <button class="login-btn" style="margin-top: 15px;" onclick="submitRemark()" id="submitRemarkBtn" data-i18n="remark_submit">Отправить</button>
-      </div>
-    </div>
-  </div>
+
 
   <script>
     const GAS_URL = "https://script.google.com/macros/s/AKfycbxTRggIYWI-7mScAylWiAa_zIJIofqcSFCLm7YKgaQekoYm4nnu-Z-HAMR2c-nlAFIvyg/exec"; // НЕ ЗАБУДЬТЕ ВСТАВИТЬ ВАШУ ССЫЛКУ!
@@ -1207,22 +1342,22 @@
       } else {
         activeStatusFilter = stage;
       }
-      
+
       for (let i = 0; i <= 4; i++) {
-         const btn = document.getElementById('filter-btn-' + i);
-         if (!btn) continue;
-         if (activeStatusFilter === null) {
-            btn.style.opacity = '1';
-            btn.style.background = 'transparent';
-         } else if (activeStatusFilter === i) {
-            btn.style.opacity = '1';
-            btn.style.background = 'rgba(255,255,255,0.1)';
-         } else {
-            btn.style.opacity = '0.4';
-            btn.style.background = 'transparent';
-         }
+        const btn = document.getElementById('filter-btn-' + i);
+        if (!btn) continue;
+        if (activeStatusFilter === null) {
+          btn.style.opacity = '1';
+          btn.style.background = 'transparent';
+        } else if (activeStatusFilter === i) {
+          btn.style.opacity = '1';
+          btn.style.background = 'rgba(255,255,255,0.1)';
+        } else {
+          btn.style.opacity = '0.4';
+          btn.style.background = 'transparent';
+        }
       }
-      
+
       if (segmentsData.length > 0) renderDashboard();
     }
 
@@ -1364,9 +1499,6 @@
         chart_status: "Распределение статусов", chart_type: "Номенклатура",
         legend_red: "Ожидает контроля", legend_orange: "В процессе сдачи", legend_blue: "Готов к погружению", legend_green: "Завершен", legend_gray: "В плане",
         legend_gray_cage: "Ожидается поставка",
-        tab_acceptance: "ПРИЁМКА", acc_approve: "ПРИНЯТО", acc_remark: "ЗАМЕЧАНИЯ",
-        remark_title: "Замечания по каркасу", remark_history: "История замечаний:", remark_submit: "Отправить",
-        acc_empty: "Нет активных каркасов на этапах Контроль/Сдача",
         stage_names: ["Входной контроль", "Сдача", "Ожидание", "Погружение"],
         stage1_title: "Входной контроль", stage1_desc: "Осмотр геометрии, 3 стороны каркаса, муфты в комплекте",
         stage2_title: "Стыковка", stage2_desc: "Затяжка муфт, сварка уголков",
@@ -1385,9 +1517,6 @@
         chart_status: "Status Distribution", chart_type: "Nomenclature",
         legend_red: "Awaiting Inspection", legend_orange: "Handover in Progress", legend_blue: "Ready for Submersion", legend_green: "Completed", legend_gray: "Planned",
         legend_gray_cage: "Delivery expected",
-        tab_acceptance: "ACCEPTANCE", acc_approve: "APPROVED", acc_remark: "REMARKS",
-        remark_title: "Cage Remarks", remark_history: "Remark History:", remark_submit: "Submit",
-        acc_empty: "No active cages in inspection/handover stages",
         stage_names: ["Inspection", "Handover", "Awaiting", "Submersion"],
         stage1_title: "Incoming Inspection", stage1_desc: "Geometry check, 3 sides of the cage, couplers included",
         stage2_title: "Docking", stage2_desc: "Tightening couplers, welding angles",
@@ -1406,9 +1535,6 @@
         chart_status: "Durum Dağılımı", chart_type: "İsimlendirme",
         legend_red: "Kontrol Bekliyor", legend_orange: "Teslim Sürecinde", legend_blue: "Daldırmaya Hazır", legend_green: "Tamamlandı", legend_gray: "Planlanmış",
         legend_gray_cage: "Teslimat bekleniyor",
-        tab_acceptance: "KABUL", acc_approve: "ONAYLANDI", acc_remark: "AÇIKLAMALAR",
-        remark_title: "Kafes Açıklamaları", remark_history: "Açıklama Geçmişi:", remark_submit: "Gönder",
-        acc_empty: "Kontrol/teslim aşamasında aktif kafes yok",
         stage_names: ["Kontrol", "Teslim", "Bekleme", "Daldırma"],
         stage1_title: "Giriş kontrolü", stage1_desc: "Geometri kontrolü, kafesin 3 tarafı, manşonlar dahil",
         stage2_title: "Ekleme", stage2_desc: "Manşonların sıkılması, köşebentlerin kaynaklanması",
@@ -1518,11 +1644,11 @@
 
       let cagesToDisplay = segment.cages;
       if (activeStatusFilter !== null) {
-          cagesToDisplay = segment.cages.filter(c => {
-             let st = c.currentStage !== undefined ? c.currentStage : 0;
-             if (st > 4) st = 4;
-             return st === activeStatusFilter;
-          });
+        cagesToDisplay = segment.cages.filter(c => {
+          let st = c.currentStage !== undefined ? c.currentStage : 0;
+          if (st > 4) st = 4;
+          return st === activeStatusFilter;
+        });
       }
 
       let cagesHtml = '';
@@ -1537,12 +1663,15 @@
 
         let displayId = cage.id ? '№' + cage.id : 'Б/Н';
 
+        let pipeInfoHtml = cage.pipeInfo ? `<span class="cage-type" style="background-color: #6366f1; color: #fff;">${cage.pipeInfo}</span>` : '';
+
         cagesHtml += `
             <div class="modal-cage">
                 <div class="m-cage-top">
                     <div style="display: flex; gap: 15px; align-items: center;">
                         <span class="cage-id">${displayId}</span>
                         <span class="cage-type" style="background-color: ${getColorForType(cage.type)}">${cage.type}</span>
+                        ${pipeInfoHtml}
                     </div>
                     <div style="color: ${statusData.color}; font-size: 11px; font-weight: bold; display: flex; align-items: center; gap: 6px;">
                         ${blinkerHtml}
@@ -1688,200 +1817,6 @@
       });
     }
 
-    let currentRemarkCage = null;
-
-    window.toggleCard = function(cardEl) {
-       let body = cardEl.querySelector('.acc-body');
-       let icon = cardEl.querySelector('.expand-icon');
-       if (body.style.display === 'none') {
-          body.style.display = 'block';
-          icon.style.transform = 'rotate(90deg)';
-          cardEl.style.background = 'rgba(30, 41, 59, 0.8)';
-       } else {
-          body.style.display = 'none';
-          icon.style.transform = 'rotate(0deg)';
-          cardEl.style.background = '';
-       }
-    }
-
-    function renderAcceptancePage() {
-      const container = document.getElementById('acc-grid-container');
-      if (!container) return;
-      container.innerHTML = '';
-      
-      const userCompany = sessionStorage.getItem('authCompany') || '';
-      const userCanApprove = sessionStorage.getItem('authCanApprove') === 'true';
-
-      let hasCages = false;
-      segmentsData.forEach((segment) => {
-        segment.cages.forEach(cage => {
-          let st = cage.currentStage !== undefined ? cage.currentStage : 0;
-          if (st === 1 || st === 2) {
-             hasCages = true;
-             let displayId = cage.id ? '№' + cage.id : 'Б/Н';
-             
-             function renderStageBlock(stageId, stageTitle, stageDesc, companiesData) {
-                const companies = [
-                   { id: 'Kasktaş', name: 'Kasktaş', data: companiesData.kasktas || {approved:false,remark:""} },
-                   { id: 'Rencons', name: 'Rencons', data: companiesData.rencons || {approved:false,remark:""} },
-                   { id: 'Sinergiya', name: 'Sinergiya', data: companiesData.sinergiya || {approved:false,remark:""} }
-                ];
-
-                let compHtml = '';
-                companies.forEach(comp => {
-                   let isMyCompany = (comp.id === userCompany);
-                   let hasRights = isMyCompany && userCanApprove;
-                   let btnApproveClass = comp.data.approved ? "btn-approve active" : "btn-approve";
-                   let btnApproveText = comp.data.approved ? "✔ " + t('acc_approve') : t('acc_approve');
-                   let remarkClass = comp.data.remark ? "btn-remark has-remark" : "btn-remark";
-                   let btnRemarkText = comp.data.remark ? "❗ " + t('acc_remark') : t('acc_remark');
-                   
-                   let infoHtml = comp.data.approved && comp.data.info ? `<div style="font-size: 10px; color: #10b981; margin-top: 4px; font-weight: 600; text-align: right; letter-spacing: 0.3px;">${comp.data.info}</div>` : '';
-                   
-                   let remarkPreview = '';
-                   if (comp.data.remark) {
-                      let lines = comp.data.remark.split('\\n');
-                      let lastLine = lines[lines.length - 1];
-                      remarkPreview = `<div style="font-size: 10px; color: #fde68a; margin-top: 4px; padding: 4px 6px; background: rgba(245, 158, 11, 0.15); border-radius: 4px; border-left: 2px solid #f59e0b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="Нажмите 'Замечания', чтобы прочитать полностью">💬 ${lastLine}</div>`;
-                   }
-                   
-                   compHtml += `
-                     <div class="company-row" style="flex-direction: column; align-items: stretch; padding: 6px 0; border-bottom: 1px dashed rgba(51, 65, 85, 0.3);">
-                        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                           <div class="comp-name" style="font-size: 12px; width: 70px;">${comp.name}</div>
-                           <div class="comp-actions" style="display: flex; gap: 6px;">
-                              <button class="${btnApproveClass}" ${!hasRights ? 'disabled' : ''} onclick="event.stopPropagation(); handleAcceptanceAction('${segment.name}', '${cage.id}', '${comp.id}', ${comp.data.approved ? "'unapprove'" : "'approve'"}, ${stageId})">${btnApproveText}</button>
-                              <button class="${remarkClass}" ${(!hasRights && !comp.data.remark) ? 'disabled' : ''} onclick="event.stopPropagation(); openRemarkModal('${segment.name}', '${cage.id}', '${comp.id}', ${stageId})">${btnRemarkText}</button>
-                           </div>
-                        </div>
-                        ${infoHtml}
-                        ${remarkPreview}
-                     </div>
-                   `;
-                });
-                
-                return `
-                  <div class="stage-block" style="background: rgba(15, 23, 42, 0.4); border-radius: 6px; padding: 10px; margin-bottom: 10px; border: 1px solid #334155;" onclick="event.stopPropagation()">
-                     <div style="font-size: 13px; font-weight: bold; color: #e2e8f0; margin-bottom: 4px;">${stageId}. ${stageTitle}</div>
-                     <div style="font-size: 11px; color: #94a3b8; margin-bottom: 8px;">${stageDesc}</div>
-                     ${compHtml}
-                  </div>
-                `;
-             }
-
-             let stagesHtml = '';
-             let acc = cage.acceptances || { stage1:{}, stage2:{}, stage3:{} };
-             stagesHtml += renderStageBlock(1, t('stage1_title'), t('stage1_desc'), acc.stage1 || {});
-             stagesHtml += renderStageBlock(2, t('stage2_title'), t('stage2_desc'), acc.stage2 || {});
-             stagesHtml += renderStageBlock(3, t('stage3_title'), t('stage3_desc'), acc.stage3 || {});
-
-             let statusData = getCageStatusData(st);
-             let html = `
-               <div class="acc-card" onclick="toggleCard(this)">
-                  <div class="acc-header">
-                     <div class="acc-title">
-                        <span class="expand-icon" style="display: inline-block; transition: transform 0.3s ease; margin-right: 6px;">▶</span>
-                        ${segment.name} - ${displayId}
-                     </div>
-                     <div style="font-size:11px; color:${statusData.color}; font-weight:bold;">${t(statusData.textKey).toUpperCase()}</div>
-                  </div>
-                  <div class="acc-body" style="display: none;">
-                     ${stagesHtml}
-                  </div>
-               </div>
-             `;
-             container.innerHTML += html;
-          }
-        });
-      });
-
-      if (!hasCages) {
-         container.innerHTML = `<div style="color:#64748b; font-size:14px; grid-column: 1/-1;">${t('acc_empty')}</div>`;
-      }
-    }
-
-    async function handleAcceptanceAction(segment, cageId, company, actType, stageId, remarkText = "") {
-       const btnId = actType === 'remark' ? 'submitRemarkBtn' : null;
-       if (btnId) {
-          const btn = document.getElementById(btnId);
-          btn.disabled = true;
-          btn.innerText = '...';
-       }
-
-       const userFio = sessionStorage.getItem('authName') || "Неизвестно";
-       
-       try {
-          const url = `${GAS_URL}?action=updateAcceptance&segment=${encodeURIComponent(segment)}&cageId=${encodeURIComponent(cageId)}&company=${encodeURIComponent(company)}&actType=${actType}&stageId=${stageId}&remark=${encodeURIComponent(remarkText)}&userFio=${encodeURIComponent(userFio)}`;
-          const response = await fetch(url);
-          const result = await response.json();
-          if (result.success) {
-             if (actType === 'remark') closeRemarkModal();
-             loadData(); 
-          } else {
-             alert(result.error || "Ошибка сохранения");
-          }
-       } catch (err) {
-          alert("Ошибка соединения");
-       }
-
-       if (btnId) {
-          const btn = document.getElementById(btnId);
-          btn.disabled = false;
-          btn.innerText = t('remark_submit');
-       }
-    }
-
-    function openRemarkModal(segment, cageId, company) {
-       currentRemarkCage = { segment, cageId, company };
-       const seg = segmentsData.find(s => s.name === segment);
-       const cage = seg.cages.find(c => String(c.id) === String(cageId));
-       const acc = cage.acceptances || {};
-       let rem = "";
-       if (company === 'Kasktaş') rem = acc.kasktas?.remark || "";
-       if (company === 'Rencons') rem = acc.rencons?.remark || "";
-       if (company === 'Sinergiya') rem = acc.sinergiya?.remark || "";
-
-       const histCont = document.getElementById('remark-history-container');
-       const histText = document.getElementById('remark-history-text');
-       
-       if (rem) {
-          histText.innerText = rem;
-          histCont.style.display = 'block';
-       } else {
-          histCont.style.display = 'none';
-          histText.innerText = "";
-       }
-
-       document.getElementById('new-remark-text').value = "";
-       
-       const userCompany = sessionStorage.getItem('authCompany');
-       const userCanApprove = sessionStorage.getItem('authCanApprove') === 'true';
-       const hasRights = (userCompany === company) && userCanApprove;
-
-       if (!hasRights) {
-          document.getElementById('new-remark-text').style.display = 'none';
-          document.getElementById('submitRemarkBtn').style.display = 'none';
-       } else {
-          document.getElementById('new-remark-text').style.display = 'block';
-          document.getElementById('submitRemarkBtn').style.display = 'block';
-       }
-
-       document.getElementById('remarkModal').classList.add('active');
-    }
-
-    function closeRemarkModal(e) {
-       if (e && e.target !== document.getElementById('remarkModal')) return;
-       document.getElementById('remarkModal').classList.remove('active');
-       currentRemarkCage = null;
-    }
-
-    function submitRemark() {
-       if (!currentRemarkCage) return;
-       const text = document.getElementById('new-remark-text').value.trim();
-       if (!text) return;
-       handleAcceptanceAction(currentRemarkCage.segment, currentRemarkCage.cageId, currentRemarkCage.company, 'remark', currentRemarkCage.stageId, text);
-    }
-
     function renderDashboard() {
       const stageNames = t('stage_names');
       let counts = { red: 0, orange: 0, blue: 0, green: 0 };
@@ -1923,7 +1858,6 @@
       document.getElementById('summary-tbody').innerHTML = tableRows;
 
       renderMap();
-      renderAcceptancePage();
 
       const grid = document.getElementById('segments-grid');
       grid.innerHTML = '';
@@ -1931,12 +1865,12 @@
         let filteredCages = segment.cages;
         if (activeStatusFilter !== null) {
           filteredCages = segment.cages.filter(c => {
-             let st = c.currentStage !== undefined ? c.currentStage : 0;
-             if (st > 4) st = 4;
-             return st === activeStatusFilter;
+            let st = c.currentStage !== undefined ? c.currentStage : 0;
+            if (st > 4) st = 4;
+            return st === activeStatusFilter;
           });
         }
-        
+
         if (activeStatusFilter !== null && filteredCages.length === 0) return;
 
         let html = `
@@ -1976,11 +1910,12 @@
             : `<div style="width: 8px; height: 8px; background: ${statusData.color}; border-radius: 50%;"></div>`;
 
           let displayId = cage.id ? '№' + cage.id : 'Б/Н';
+          let pipeInfoHtml = cage.pipeInfo ? `<span class="cage-type" style="background-color: #6366f1; color: #fff; margin-left: 8px;">${cage.pipeInfo}</span>` : '';
 
           html += `
                 <div class="cage-item">
                     <div class="cage-header">
-                        <div><span class="cage-id">${displayId}</span><span class="cage-type" style="background-color: ${getColorForType(cage.type)}">${cage.type}</span></div>
+                        <div><span class="cage-id">${displayId}</span><span class="cage-type" style="background-color: ${getColorForType(cage.type)}">${cage.type}</span>${pipeInfoHtml}</div>
                         <div class="cage-status" style="color: ${statusData.color};">
                             ${blinkerHtml}
                             ${t(statusData.textKey).toUpperCase()}
@@ -2015,7 +1950,7 @@
           return;
         }
 
-        const url = `${GAS_URL}?action=getData`;
+        const url = `${GAS_URL}?action=getData&_t=${new Date().getTime()}`;
         const response = await fetch(url);
         segmentsData = await response.json();
         renderDashboard();
