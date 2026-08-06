@@ -366,7 +366,7 @@
       }
     }
 
-    
+
     /* Проекты */
     .project-tabs {
       display: flex;
@@ -375,6 +375,7 @@
       background: rgba(15, 23, 42, 0.95);
       border-bottom: 2px solid #334155;
     }
+
     .project-tab {
       padding: 12px 25px;
       cursor: pointer;
@@ -385,15 +386,18 @@
       transition: all 0.2s;
       text-transform: uppercase;
     }
+
     .project-tab:hover {
       color: #e2e8f0;
-      background: rgba(255,255,255,0.05);
+      background: rgba(255, 255, 255, 0.05);
     }
+
     .project-tab.active {
       color: #38bdf8;
       background: rgba(56, 189, 248, 0.1);
       border-bottom: 3px solid #38bdf8;
     }
+
     /* Вкладки */
     .nav-tabs {
       display: flex;
@@ -1130,7 +1134,7 @@
       </div>
     </div>
 
-    
+
     <div class="project-tabs" id="project-tabs">
       <div class="project-tab active" onclick="switchProject('Энергоцентр', event)">ЭНЕРГОЦЕНТР</div>
       <div class="project-tab" onclick="switchProject('Лахта 2', event)">ЛАХТА-2</div>
@@ -1168,7 +1172,7 @@
               <thead>
                 <tr style="border-bottom: 1px solid #334155; color: #94a3b8;">
                   <th style="padding: 10px; font-weight: 600;" data-i18n="th_segment">Захватка</th>
-                                    <th style="padding: 10px; font-weight: 600;" data-i18n="th_total">ВСЕГО</th>
+                  <th style="padding: 10px; font-weight: 600;" data-i18n="th_total">ВСЕГО</th>
                   <th style="padding: 10px; font-weight: 600; color: #10b981;" data-i18n="legend_green">ПОГРУЖЕНИЕ</th>
                   <th style="padding: 10px; font-weight: 600; color: #06b6d4;" data-i18n="legend_teal">ЗАВЕРШЕНИЕ</th>
                   <th style="padding: 10px; font-weight: 600; color: #3b82f6;" data-i18n="legend_blue">СБОРКА</th>
@@ -1376,7 +1380,7 @@
     function toggleFilter(stage) {
       if (activeStatusFilter === stage) {
         switchTab('analytics');
-      activeStatusFilter = null;
+        activeStatusFilter = null;
       } else {
         activeStatusFilter = stage;
       }
@@ -1911,10 +1915,22 @@
 
         if (activeStatusFilter !== null && filteredCages.length === 0) return;
 
+        let segDetails = '';
+        if (segment.totalWeight || segment.totalVolume || segment.daysSincePouring) {
+            segDetails = `<div style="font-size: 12px; color: #94a3b8; font-weight: normal; display: flex; gap: 15px; margin-top: 6px;">`;
+            if (segment.totalWeight) segDetails += `<div>Общ. вес: <span style="color:#e2e8f0">${segment.totalWeight} т</span></div>`;
+            if (segment.totalVolume) segDetails += `<div>Объём: <span style="color:#e2e8f0">${segment.totalVolume} м³</span></div>`;
+            if (segment.daysSincePouring) segDetails += `<div>Заливка: <span style="color:#e2e8f0">${segment.daysSincePouring} дн. назад</span></div>`;
+            segDetails += `</div>`;
+        }
+
         let html = `
             <div class="segment-card" onclick="openModal(${index})">
                 <div class="segment-header">
-                    <div class="segment-title">${segment.name}</div>
+                    <div class="segment-title">
+                        ${segment.name}
+                        ${segDetails}
+                    </div>
                     <div class="segment-count">${t('vol')} ${filteredCages.length}</div>
                 </div>`;
 
@@ -1949,12 +1965,12 @@
 
           let displayId = cage.id ? '№' + cage.id : 'Б/Н';
           let pipeInfoHtml = cage.pipes ? `<span class="cage-type" style="background-color: #6366f1; color: #fff; margin-left: 8px;">${cage.pipes}</span>` : '';
-          
+
           let detailsHtml = '';
           if (cage.weight) {
-             detailsHtml = `<div style="margin-top: 12px; padding-top: 8px; border-top: 1px dashed rgba(255,255,255,0.1); font-size: 11px; color: #cbd5e1; display: grid; grid-template-columns: 1fr; gap: 4px;">`;
-             if (cage.weight) detailsHtml += `<div><span style="color:#94a3b8">Вес (т):</span> ${cage.weight}</div>`;
-             detailsHtml += `</div>`;
+            detailsHtml = `<div style="margin-top: 12px; padding-top: 8px; border-top: 1px dashed rgba(255,255,255,0.1); font-size: 11px; color: #cbd5e1; display: grid; grid-template-columns: 1fr; gap: 4px;">`;
+            if (cage.weight) detailsHtml += `<div><span style="color:#94a3b8">Вес (т):</span> ${cage.weight}</div>`;
+            detailsHtml += `</div>`;
           }
 
 
