@@ -366,6 +366,38 @@
       }
     }
 
+
+    /* Проекты */
+    .project-tabs {
+      display: flex;
+      padding: 15px 30px 0;
+      gap: 15px;
+      background: rgba(15, 23, 42, 0.95);
+      border-bottom: 2px solid #334155;
+    }
+
+    .project-tab {
+      padding: 12px 25px;
+      cursor: pointer;
+      color: #94a3b8;
+      font-weight: 700;
+      font-size: 15px;
+      border-radius: 8px 8px 0 0;
+      transition: all 0.2s;
+      text-transform: uppercase;
+    }
+
+    .project-tab:hover {
+      color: #e2e8f0;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .project-tab.active {
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.1);
+      border-bottom: 3px solid #38bdf8;
+    }
+
     /* Вкладки */
     .nav-tabs {
       display: flex;
@@ -1102,6 +1134,13 @@
       </div>
     </div>
 
+
+    <div class="project-tabs" id="project-tabs">
+      <div class="project-tab active" onclick="switchProject('Энергоцентр', event)">ЭНЕРГОЦЕНТР</div>
+      <div class="project-tab" onclick="switchProject('Лахта 2', event)">ЛАХТА-2</div>
+      <div class="project-tab" onclick="switchProject('Лахта 3', event)">ЛАХТА-3</div>
+      <div class="project-tab" onclick="switchProject('Коффердам', event)">КОФФЕРДАМ</div>
+    </div>
     <div class="nav-tabs">
       <div class="nav-tab active" onclick="switchTab('analytics', event)" data-i18n="tab_analytics">АНАЛИТИКА</div>
       <div class="nav-tab" onclick="switchTab('map', event)" data-i18n="tab_map">КАРТА ПРОЕКТА</div>
@@ -1133,11 +1172,12 @@
               <thead>
                 <tr style="border-bottom: 1px solid #334155; color: #94a3b8;">
                   <th style="padding: 10px; font-weight: 600;" data-i18n="th_segment">Захватка</th>
-                  <th style="padding: 10px; font-weight: 600;" data-i18n="th_total">Всего</th>
-                  <th style="padding: 10px; font-weight: 600; color: #10b981;" data-i18n="th_green">Завершено</th>
-                  <th style="padding: 10px; font-weight: 600; color: #38bdf8;" data-i18n="th_blue">К погружению</th>
-                  <th style="padding: 10px; font-weight: 600; color: #f59e0b;" data-i18n="th_orange">Сдача</th>
-                  <th style="padding: 10px; font-weight: 600; color: #ef4444;" data-i18n="th_red">Контроль</th>
+                  <th style="padding: 10px; font-weight: 600;" data-i18n="th_total">ВСЕГО</th>
+                  <th style="padding: 10px; font-weight: 600; color: #10b981;" data-i18n="legend_green">ПОГРУЖЕНИЕ</th>
+                  <th style="padding: 10px; font-weight: 600; color: #06b6d4;" data-i18n="legend_teal">ЗАВЕРШЕНИЕ</th>
+                  <th style="padding: 10px; font-weight: 600; color: #3b82f6;" data-i18n="legend_blue">СБОРКА</th>
+                  <th style="padding: 10px; font-weight: 600; color: #f59e0b;" data-i18n="legend_orange">НАЧАЛО</th>
+                  <th style="padding: 10px; font-weight: 600; color: #ef4444;" data-i18n="legend_red">ПОСТАВКА</th>
                 </tr>
               </thead>
               <tbody id="summary-tbody"></tbody>
@@ -1332,12 +1372,14 @@
     let segmentsData = [];
     let pieChartInstance = null;
     let barChartInstance = null;
+    let activeProject = "Энергоцентр";
     let currentLang = 'ru';
     let panzoomInstance = null;
     let activeStatusFilter = null;
 
     function toggleFilter(stage) {
       if (activeStatusFilter === stage) {
+        switchTab('analytics');
         activeStatusFilter = null;
       } else {
         activeStatusFilter = stage;
@@ -1819,7 +1861,7 @@
 
     function renderDashboard() {
       const stageNames = t('stage_names');
-      let counts = { red: 0, orange: 0, blue: 0, green: 0 };
+      let counts = { red: 0, orange: 0, blue: 0, teal: 0, green: 0 };
       let typesCount = { 'КП-1': 0, 'КП-2': 0, 'КП-3': 0 };
 
       let tableRows = '';
@@ -1910,7 +1952,15 @@
             : `<div style="width: 8px; height: 8px; background: ${statusData.color}; border-radius: 50%;"></div>`;
 
           let displayId = cage.id ? '№' + cage.id : 'Б/Н';
-          let pipeInfoHtml = cage.pipeInfo ? `<span class="cage-type" style="background-color: #6366f1; color: #fff; margin-left: 8px;">${cage.pipeInfo}</span>` : '';
+          let pipeInfoHtml = cage.pipes ? `<span class="cage-type" style="background-color: #6366f1; color: #fff; margin-left: 8px;">${cage.pipes}</span>` : '';
+
+          let detailsHtml = '';
+          if (cage.weight) {
+            detailsHtml = `<div style="margin-top: 12px; padding-top: 8px; border-top: 1px dashed rgba(255,255,255,0.1); font-size: 11px; color: #cbd5e1; display: grid; grid-template-columns: 1fr; gap: 4px;">`;
+            if (cage.weight) detailsHtml += `<div><span style="color:#94a3b8">Вес (т):</span> ${cage.weight}</div>`;
+            detailsHtml += `</div>`;
+          }
+
 
           html += `
                 <div class="cage-item">
@@ -1950,7 +2000,7 @@
           return;
         }
 
-        const url = `${GAS_URL}?action=getData&_t=${new Date().getTime()}`;
+        const url = `${GAS_URL}?action=getData&project=${encodeURIComponent(activeProject)}&_t=${new Date().getTime()}`;
         const response = await fetch(url);
         segmentsData = await response.json();
         renderDashboard();
