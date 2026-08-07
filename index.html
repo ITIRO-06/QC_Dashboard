@@ -1172,6 +1172,7 @@
                 <tr style="border-bottom: 1px solid #334155; color: #94a3b8;">
                   <th style="padding: 10px; font-weight: 600;">Номер захватки</th>
                   <th style="padding: 10px; font-weight: 600;">ID</th>
+                  <th style="padding: 10px; font-weight: 600;">Трубы</th>
                   <th style="padding: 10px; font-weight: 600;">Тип</th>
                   <th style="padding: 10px; font-weight: 600;">Вес (т)</th>
                   <th style="padding: 10px; font-weight: 600;">Дата поставки</th>
@@ -1179,7 +1180,6 @@
                   <th style="padding: 10px; font-weight: 600;">Дата сборки</th>
                   <th style="padding: 10px; font-weight: 600;">Дата завершения</th>
                   <th style="padding: 10px; font-weight: 600;">Дата погружения</th>
-                  <th style="padding: 10px; font-weight: 600;">Трубы</th>
                   <th style="padding: 10px; font-weight: 600;">Общ. вес (т)</th>
                   <th style="padding: 10px; font-weight: 600;">Общ. объём (м³)</th>
                   <th style="padding: 10px; font-weight: 600;">Дней с заливки</th>
@@ -1902,7 +1902,7 @@
         let segVolume = seg.totalVolume ? `${seg.totalVolume}` : '-';
         let segPouring = seg.daysSincePouring ? `${seg.daysSincePouring}` : '-';
 
-        seg.cages.forEach(cage => {
+        seg.cages.forEach((cage, index) => {
             const dDel = cage.dateDelivery ? cage.dateDelivery.split('T')[0].split(' ')[0] : '-';
             const dSta = cage.dateStart ? cage.dateStart.split('T')[0].split(' ')[0] : '-';
             const dAss = cage.dateAssembly ? cage.dateAssembly.split('T')[0].split(' ')[0] : '-';
@@ -1912,9 +1912,13 @@
             let cWeight = cage.weight ? `${cage.weight}` : '-';
             let cPipes = cage.pipes ? `${cage.pipes}` : '-';
 
-            tableRows += `<tr style="border-bottom: 1px solid #1e293b; background: ${rowColor}; transition: background 0.2s;" onmouseover="this.style.background='rgba(255, 255, 255, 0.1)'" onmouseout="this.style.background='${rowColor}'">
+            let isLast = index === seg.cages.length - 1;
+            let borderStyle = isLast ? 'border-bottom: 2px solid #64748b;' : 'border-bottom: 1px solid #1e293b;';
+
+            tableRows += `<tr style="${borderStyle} background: ${rowColor}; transition: background 0.2s;" onmouseover="this.style.background='rgba(255, 255, 255, 0.1)'" onmouseout="this.style.background='${rowColor}'">
                 <td style="padding: 10px; color: #f8fafc; font-weight: 700;">${seg.name}</td>
                 <td style="padding: 10px; color: #cbd5e1; font-weight: 600;">${cage.id}</td>
+                <td style="padding: 10px; color: #94a3b8;">${cPipes}</td>
                 <td style="padding: 10px; color: #cbd5e1;">${cage.type}</td>
                 <td style="padding: 10px; color: #94a3b8;">${cWeight}</td>
                 <td style="padding: 10px; color: #94a3b8;">${dDel}</td>
@@ -1922,7 +1926,6 @@
                 <td style="padding: 10px; color: #94a3b8;">${dAss}</td>
                 <td style="padding: 10px; color: #94a3b8;">${dCom}</td>
                 <td style="padding: 10px; color: #94a3b8;">${dSub}</td>
-                <td style="padding: 10px; color: #94a3b8;">${cPipes}</td>
                 <td style="padding: 10px; color: #94a3b8; font-weight: 600;">${segWeight}</td>
                 <td style="padding: 10px; color: #94a3b8; font-weight: 600;">${segVolume}</td>
                 <td style="padding: 10px; color: #94a3b8; font-weight: 600;">${segPouring}</td>
