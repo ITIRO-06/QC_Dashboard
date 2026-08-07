@@ -2052,7 +2052,7 @@
             ? `<div class="status-dot-blinking" style="width: 8px; height: 8px; background: ${statusData.color}; color: ${statusData.color};"></div>`
             : `<div style="width: 8px; height: 8px; background: ${statusData.color}; border-radius: 50%;"></div>`;
 
-          let displayId = cage.id ? '№' + cage.id : 'Б/Н';
+          let displayId = cage.id ? '№' + String(cage.id).replace(/№/g, '').trim() : 'Б/Н';
           let pipeInfoHtml = cage.pipes ? `<span class="cage-type" style="background-color: #6366f1; color: #fff; margin-left: 8px;">${cage.pipes}</span>` : '';
 
           let detailsHtml = '';
