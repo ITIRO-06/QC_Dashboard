@@ -1881,11 +1881,25 @@
           else if (st >= 4) { counts.green++; sGreen++; }
         });
 
+        let rowColor = 'transparent';
+        if (seg.cages.length > 0) {
+            let totalActive = sGreen + sBlue + sOrange + sRed;
+            if (sGreen === seg.cages.length) {
+                rowColor = 'rgba(16, 185, 129, 0.15)';
+            } else if (totalActive > 0) {
+                rowColor = 'rgba(245, 158, 11, 0.15)';
+            } else {
+                rowColor = 'rgba(239, 68, 68, 0.15)';
+            }
+        } else {
+            rowColor = 'rgba(239, 68, 68, 0.15)';
+        }
+
         let weight = seg.totalWeight ? `${seg.totalWeight}` : '-';
         let volume = seg.totalVolume ? `${seg.totalVolume}` : '-';
         let pouring = seg.daysSincePouring ? `${seg.daysSincePouring} дн. назад` : '-';
 
-        tableRows += `<tr style="border-bottom: 1px solid #1e293b; transition: background 0.2s;" onmouseover="this.style.background='rgba(56, 189, 248, 0.05)'" onmouseout="this.style.background='transparent'">
+        tableRows += `<tr style="border-bottom: 1px solid #1e293b; background: ${rowColor}; transition: background 0.2s;" onmouseover="this.style.background='rgba(255, 255, 255, 0.1)'" onmouseout="this.style.background='${rowColor}'">
             <td style="padding: 12px 10px; color: #f8fafc; font-weight: 700;">${seg.name}</td>
             <td style="padding: 12px 10px; font-weight: 600; color: #cbd5e1;">${seg.cages.length}</td>
             <td style="padding: 12px 10px; color: #10b981; font-weight: 600;">${sGreen}</td>
