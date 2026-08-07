@@ -1136,10 +1136,10 @@
 
 
     <div class="project-tabs" id="project-tabs">
-      <div class="project-tab active" onclick="switchProject('Энергоцентр', event)">ЭНЕРГОЦЕНТР</div>
-      <div class="project-tab" onclick="switchProject('Лахта 2', event)">ЛАХТА-2</div>
-      <div class="project-tab" onclick="switchProject('Лахта 3', event)">ЛАХТА-3</div>
-      <div class="project-tab" onclick="switchProject('Коффердам', event)">КОФФЕРДАМ</div>
+      <div class="project-tab active" onclick="switchProject('Энергоцентр', event)" data-i18n="proj_energy">ЭНЕРГОЦЕНТР</div>
+      <div class="project-tab" onclick="switchProject('Лахта 2', event)" data-i18n="proj_lahta2">ЛАХТА-2</div>
+      <div class="project-tab" onclick="switchProject('Лахта 3', event)" data-i18n="proj_lahta3">ЛАХТА-3</div>
+      <div class="project-tab" onclick="switchProject('Коффердам', event)" data-i18n="proj_cofferdam">КОФФЕРДАМ</div>
     </div>
     <div class="nav-tabs">
       <div class="nav-tab active" onclick="switchTab('analytics', event)" data-i18n="tab_analytics">АНАЛИТИКА</div>
@@ -1164,7 +1164,7 @@
 
         <div
           style="margin-top: 25px; background: rgba(30, 41, 59, 0.6); border-radius: 6px; border: 1px solid #334155; padding: 15px;">
-          <h3 style="margin-bottom: 15px; font-size: 14px; color: #94a3b8; font-weight: 600; text-transform: uppercase;">
+          <h3 style="margin-bottom: 15px; font-size: 14px; color: #94a3b8; font-weight: 600; text-transform: uppercase;" data-i18n="full_table_title">
             Полная таблица данных</h3>
           <div style="overflow-x: auto; max-height: 600px;">
             <table id="summary-table" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; white-space: nowrap;">
@@ -1176,19 +1176,19 @@
                   <th></th>
                 </tr>
                 <tr style="border-bottom: 1px solid #334155; color: #94a3b8;">
-                  <th style="padding: 10px; font-weight: 600;">Номер захватки</th>
-                  <th style="padding: 10px; font-weight: 600;">ID</th>
-                  <th style="padding: 10px; font-weight: 600;">Трубы</th>
-                  <th style="padding: 10px; font-weight: 600;">Тип</th>
-                  <th style="padding: 10px; font-weight: 600;">Вес (т)</th>
-                  <th style="padding: 10px; font-weight: 600;">Дата поставки</th>
-                  <th style="padding: 10px; font-weight: 600;">Дата начала</th>
-                  <th style="padding: 10px; font-weight: 600;">Дата сборки</th>
-                  <th style="padding: 10px; font-weight: 600;">Дата завершения</th>
-                  <th style="padding: 10px; font-weight: 600;">Дата погружения</th>
-                  <th style="padding: 10px; font-weight: 600;">Общ. вес (т)</th>
-                  <th style="padding: 10px; font-weight: 600;">Общ. объём (м³)</th>
-                  <th style="padding: 10px; font-weight: 600;">Дней с заливки</th>
+                  <th style="padding: 10px; font-weight: 600;" data-i18n="col_segment_num">Номер захватки</th>
+                  <th style="padding: 10px; font-weight: 600;" data-i18n="col_id">ID</th>
+                  <th style="padding: 10px; font-weight: 600;" data-i18n="col_pipes">Трубы</th>
+                  <th style="padding: 10px; font-weight: 600;" data-i18n="col_type">Тип</th>
+                  <th style="padding: 10px; font-weight: 600;" data-i18n="col_weight">Вес (т)</th>
+                  <th style="padding: 10px; font-weight: 600;" data-i18n="col_date_deliv">Дата поставки</th>
+                  <th style="padding: 10px; font-weight: 600;" data-i18n="col_date_start">Дата начала</th>
+                  <th style="padding: 10px; font-weight: 600;" data-i18n="col_date_assem">Дата сборки</th>
+                  <th style="padding: 10px; font-weight: 600;" data-i18n="col_date_comp">Дата завершения</th>
+                  <th style="padding: 10px; font-weight: 600;" data-i18n="col_date_sub">Дата погружения</th>
+                  <th style="padding: 10px; font-weight: 600;" data-i18n="col_tot_weight">Общ. вес (т)</th>
+                  <th style="padding: 10px; font-weight: 600;" data-i18n="col_tot_vol">Общ. объём (м³)</th>
+                  <th style="padding: 10px; font-weight: 600;" data-i18n="col_days_pour">Дней с заливки</th>
                 </tr>
               </thead>
             </table>
@@ -1558,7 +1558,9 @@
         vol: "КАРКАСОВ:", time_spent: "Затрачено времени", current_stage: "Теку этап",
         sync: "Синхронизация...", sync_ok: "SYNC:", sync_err: "СБОЙ СВЯЗИ", no_url: "ОШИБКА: НЕТ URL",
         time_err: "Ошибка дат", no_data: "Нет данных", d: "д", h: "ч", m: "м",
-        summary_table: "Сводная таблица по захваткам", th_segment: "Захватка", th_total: "Всего", th_green: "Завершено", th_blue: "К погружению", th_orange: "Сдача", th_red: "Контроль", th_weight: "Вес (т)", th_volume: "Объём (м³)", th_concrete: "Бетонирование"
+        summary_table: "Сводная таблица по захваткам", th_segment: "Захватка", th_total: "Всего", th_green: "Завершено", th_blue: "К погружению", th_orange: "Сдача", th_red: "Контроль", th_weight: "Вес (т)", th_volume: "Объём (м³)", th_concrete: "Бетонирование",
+        proj_energy: "ЭНЕРГОЦЕНТР", proj_lahta2: "ЛАХТА-2", proj_lahta3: "ЛАХТА-3", proj_cofferdam: "КОФФЕРДАМ",
+        full_table_title: "Полная таблица данных", col_segment_num: "Номер захватки", col_id: "ID", col_pipes: "Трубы", col_type: "Тип", col_weight: "Вес (т)", col_date_deliv: "Дата поставки", col_date_start: "Дата начала", col_date_assem: "Дата сборки", col_date_comp: "Дата завершения", col_date_sub: "Дата погружения", col_tot_weight: "Общ. вес (т)", col_tot_vol: "Общ. объём (м³)", col_days_pour: "Дней с заливки"
       },
       en: {
         title: "Cage Monitoring", subtitle: "Diaphragm Wall • Dashboard", dev: "DEVELOPER: Kunarov Damir",
@@ -1566,7 +1568,7 @@
         logout: "LOGOUT", tab_analytics: "ANALYTICS", tab_map: "PROJECT MAP", tab_details: "OBJECTS (PANELS)",
         profile_title: "Personal Account", prof_fio: "Full Name", prof_email: "E-mail", prof_company: "Company", prof_role: "Position",
         change_pass_title: "Security (Change Password)", save_pass_btn: "UPDATE PASSWORD", pass_match_err: "New passwords do not match!", pass_changed_ok: "Password updated successfully!",
-        chart_status: "Status Distribution", chart_type: "Nomenclature",
+        chart_status: "Status Distribution", chart_type: "Nomenclature", table_total: "TOTAL:",
         legend_red: "Awaiting Inspection", legend_orange: "Handover in Progress", legend_blue: "Ready for Submersion", legend_green: "Completed", legend_gray: "Planned",
         legend_gray_cage: "Delivery expected",
         stage_names: ["Inspection", "Handover", "Awaiting", "Submersion"],
@@ -1576,7 +1578,9 @@
         vol: "VOL:", time_spent: "Time spent", current_stage: "Current stage",
         sync: "Syncing...", sync_ok: "SYNC:", sync_err: "CONNECTION ERROR", no_url: "ERROR: NO URL",
         time_err: "Date error", no_data: "No data", d: "d", h: "h", m: "m",
-        summary_table: "Segment Summary Table", th_segment: "Segment", th_total: "Total", th_green: "Completed", th_blue: "Ready", th_orange: "Handover", th_red: "Inspection", th_weight: "Weight (t)", th_volume: "Volume (m³)", th_concrete: "Concrete"
+        summary_table: "Segment Summary Table", th_segment: "Segment", th_total: "Total", th_green: "Completed", th_blue: "Ready", th_orange: "Handover", th_red: "Inspection", th_weight: "Weight (t)", th_volume: "Volume (m³)", th_concrete: "Concrete",
+        proj_energy: "ENERGY CENTER", proj_lahta2: "LAKHTA-2", proj_lahta3: "LAKHTA-3", proj_cofferdam: "COFFERDAM",
+        full_table_title: "Full Data Table", col_segment_num: "Segment No", col_id: "ID", col_pipes: "Pipes", col_type: "Type", col_weight: "Weight (t)", col_date_deliv: "Delivery Date", col_date_start: "Start Date", col_date_assem: "Assembly Date", col_date_comp: "Completion Date", col_date_sub: "Submersion Date", col_tot_weight: "Tot. Weight (t)", col_tot_vol: "Tot. Volume (m³)", col_days_pour: "Days since Pouring"
       },
       tr: {
         title: "Kafes İzleme", subtitle: "Diyafram Duvar • Kontrol Paneli", dev: "GELİŞTİRİCİ: Kunarov Damir",
@@ -1584,7 +1588,7 @@
         logout: "ÇIKIŞ", tab_analytics: "ANALİZ", tab_map: "PROJE HARİTASI", tab_details: "NESNELER (PANELLER)",
         profile_title: "Kişisel Hesap", prof_fio: "Adı Soyadı", prof_email: "E-mail", prof_company: "Firma / Şirket", prof_role: "Görevi",
         change_pass_title: "Güvenlik (Şifre Değiştir)", save_pass_btn: "ŞİFREYİ GÜNCELLE", pass_match_err: "Yeni şifreler eşleşmiyor!", pass_changed_ok: "Şifre başarıyla güncellendi!",
-        chart_status: "Durum Dağılımı", chart_type: "İsimlendirme",
+        chart_status: "Durum Dağılımı", chart_type: "İsimlendirme", table_total: "TOPLAM:",
         legend_red: "Kontrol Bekliyor", legend_orange: "Teslim Sürecinde", legend_blue: "Daldırmaya Hazır", legend_green: "Tamamlandı", legend_gray: "Planlanmış",
         legend_gray_cage: "Teslimat bekleniyor",
         stage_names: ["Kontrol", "Teslim", "Bekleme", "Daldırma"],
@@ -1594,7 +1598,9 @@
         vol: "HACİM:", time_spent: "Geçen süre", current_stage: "Mevcut aşama",
         sync: "Senkronize ediliyor...", sync_ok: "SYNC:", sync_err: "BAĞLANTI HATASI", no_url: "HATA: URL YOK",
         time_err: "Tarih hatası", no_data: "Veri yok", d: "g", h: "s", m: "d",
-        summary_table: "Panel Özet Tablosu", th_segment: "Panel", th_total: "Toplam", th_green: "Tamamlandı", th_blue: "Hazır", th_orange: "Teslim", th_red: "Kontrol", th_weight: "Ağırlık (t)", th_volume: "Hacim (m³)", th_concrete: "Betonlama"
+        summary_table: "Panel Özet Tablosu", th_segment: "Panel", th_total: "Toplam", th_green: "Tamamlandı", th_blue: "Hazır", th_orange: "Teslim", th_red: "Kontrol", th_weight: "Ağırlık (t)", th_volume: "Hacim (m³)", th_concrete: "Betonlama",
+        proj_energy: "ENERJİ MERKEZİ", proj_lahta2: "LAKHTA-2", proj_lahta3: "LAKHTA-3", proj_cofferdam: "KOFERDAM",
+        full_table_title: "Tam Veri Tablosu", col_segment_num: "Panel No", col_id: "ID", col_pipes: "Borular", col_type: "Tip", col_weight: "Ağırlık (t)", col_date_deliv: "Teslimat Tarihi", col_date_start: "Başlangıç Tarihi", col_date_assem: "Montaj Tarihi", col_date_comp: "Bitiş Tarihi", col_date_sub: "Daldırma Tarihi", col_tot_weight: "Top. Ağırlık (t)", col_tot_vol: "Top. Hacim (m³)", col_days_pour: "Dökümden Sonraki Gün"
       }
     };
 
