@@ -1172,12 +1172,14 @@
               <thead>
                 <tr style="border-bottom: 1px solid #334155; color: #94a3b8;">
                   <th style="padding: 10px; font-weight: 600;" data-i18n="th_segment">Захватка</th>
-                  <th style="padding: 10px; font-weight: 600;" data-i18n="th_total">ВСЕГО</th>
-                  <th style="padding: 10px; font-weight: 600; color: #10b981;" data-i18n="legend_green">ПОГРУЖЕНИЕ</th>
-                  <th style="padding: 10px; font-weight: 600; color: #06b6d4;" data-i18n="legend_teal">ЗАВЕРШЕНИЕ</th>
-                  <th style="padding: 10px; font-weight: 600; color: #3b82f6;" data-i18n="legend_blue">СБОРКА</th>
-                  <th style="padding: 10px; font-weight: 600; color: #f59e0b;" data-i18n="legend_orange">НАЧАЛО</th>
-                  <th style="padding: 10px; font-weight: 600; color: #ef4444;" data-i18n="legend_red">ПОСТАВКА</th>
+                  <th style="padding: 10px; font-weight: 600;" data-i18n="th_total">Всего</th>
+                  <th style="padding: 10px; font-weight: 600; color: #10b981;" data-i18n="legend_green">Завершен</th>
+                  <th style="padding: 10px; font-weight: 600; color: #38bdf8;" data-i18n="legend_blue">Готов к погружению</th>
+                  <th style="padding: 10px; font-weight: 600; color: #f59e0b;" data-i18n="legend_orange">В процессе сдачи</th>
+                  <th style="padding: 10px; font-weight: 600; color: #ef4444;" data-i18n="legend_red">Ожидает контроля</th>
+                  <th style="padding: 10px; font-weight: 600;" data-i18n="th_weight">Вес (т)</th>
+                  <th style="padding: 10px; font-weight: 600;" data-i18n="th_volume">Объём (м³)</th>
+                  <th style="padding: 10px; font-weight: 600;" data-i18n="th_concrete">Бетонирование</th>
                 </tr>
               </thead>
               <tbody id="summary-tbody"></tbody>
@@ -1548,7 +1550,7 @@
         vol: "КАРКАСОВ:", time_spent: "Затрачено времени", current_stage: "Теку этап",
         sync: "Синхронизация...", sync_ok: "SYNC:", sync_err: "СБОЙ СВЯЗИ", no_url: "ОШИБКА: НЕТ URL",
         time_err: "Ошибка дат", no_data: "Нет данных", d: "д", h: "ч", m: "м",
-        summary_table: "Сводная таблица по захваткам", th_segment: "Захватка", th_total: "Всего", th_green: "Завершено", th_blue: "К погружению", th_orange: "Сдача", th_red: "Контроль"
+        summary_table: "Сводная таблица по захваткам", th_segment: "Захватка", th_total: "Всего", th_green: "Завершено", th_blue: "К погружению", th_orange: "Сдача", th_red: "Контроль", th_weight: "Вес (т)", th_volume: "Объём (м³)", th_concrete: "Бетонирование"
       },
       en: {
         title: "Cage Monitoring", subtitle: "Diaphragm Wall • Dashboard", dev: "DEVELOPER: Kunarov Damir",
@@ -1566,7 +1568,7 @@
         vol: "VOL:", time_spent: "Time spent", current_stage: "Current stage",
         sync: "Syncing...", sync_ok: "SYNC:", sync_err: "CONNECTION ERROR", no_url: "ERROR: NO URL",
         time_err: "Date error", no_data: "No data", d: "d", h: "h", m: "m",
-        summary_table: "Segment Summary Table", th_segment: "Segment", th_total: "Total", th_green: "Completed", th_blue: "Ready", th_orange: "Handover", th_red: "Inspection"
+        summary_table: "Segment Summary Table", th_segment: "Segment", th_total: "Total", th_green: "Completed", th_blue: "Ready", th_orange: "Handover", th_red: "Inspection", th_weight: "Weight (t)", th_volume: "Volume (m³)", th_concrete: "Concrete"
       },
       tr: {
         title: "Kafes İzleme", subtitle: "Diyafram Duvar • Kontrol Paneli", dev: "GELİŞTİRİCİ: Kunarov Damir",
@@ -1584,7 +1586,7 @@
         vol: "HACİM:", time_spent: "Geçen süre", current_stage: "Mevcut aşama",
         sync: "Senkronize ediliyor...", sync_ok: "SYNC:", sync_err: "BAĞLANTI HATASI", no_url: "HATA: URL YOK",
         time_err: "Tarih hatası", no_data: "Veri yok", d: "g", h: "s", m: "d",
-        summary_table: "Panel Özet Tablosu", th_segment: "Panel", th_total: "Toplam", th_green: "Tamamlandı", th_blue: "Hazır", th_orange: "Teslim", th_red: "Kontrol"
+        summary_table: "Panel Özet Tablosu", th_segment: "Panel", th_total: "Toplam", th_green: "Tamamlandı", th_blue: "Hazır", th_orange: "Teslim", th_red: "Kontrol", th_weight: "Ağırlık (t)", th_volume: "Hacim (m³)", th_concrete: "Betonlama"
       }
     };
 
@@ -1879,13 +1881,20 @@
           else if (st >= 4) { counts.green++; sGreen++; }
         });
 
-        tableRows += `<tr style="border-bottom: 1px solid #1e293b;">
-            <td style="padding: 10px; color: #f8fafc; font-weight: 600;">${seg.name}</td>
-            <td style="padding: 10px; font-weight: 600;">${seg.cages.length}</td>
-            <td style="padding: 10px; color: #10b981; font-weight: 600;">${sGreen}</td>
-            <td style="padding: 10px; color: #38bdf8; font-weight: 600;">${sBlue}</td>
-            <td style="padding: 10px; color: #f59e0b; font-weight: 600;">${sOrange}</td>
-            <td style="padding: 10px; color: #ef4444; font-weight: 600;">${sRed}</td>
+        let weight = seg.totalWeight ? `${seg.totalWeight}` : '-';
+        let volume = seg.totalVolume ? `${seg.totalVolume}` : '-';
+        let pouring = seg.daysSincePouring ? `${seg.daysSincePouring} дн. назад` : '-';
+
+        tableRows += `<tr style="border-bottom: 1px solid #1e293b; transition: background 0.2s;" onmouseover="this.style.background='rgba(56, 189, 248, 0.05)'" onmouseout="this.style.background='transparent'">
+            <td style="padding: 12px 10px; color: #f8fafc; font-weight: 700;">${seg.name}</td>
+            <td style="padding: 12px 10px; font-weight: 600; color: #cbd5e1;">${seg.cages.length}</td>
+            <td style="padding: 12px 10px; color: #10b981; font-weight: 600;">${sGreen}</td>
+            <td style="padding: 12px 10px; color: #38bdf8; font-weight: 600;">${sBlue}</td>
+            <td style="padding: 12px 10px; color: #f59e0b; font-weight: 600;">${sOrange}</td>
+            <td style="padding: 12px 10px; color: #ef4444; font-weight: 600;">${sRed}</td>
+            <td style="padding: 12px 10px; color: #94a3b8; font-weight: 500;">${weight}</td>
+            <td style="padding: 12px 10px; color: #94a3b8; font-weight: 500;">${volume}</td>
+            <td style="padding: 12px 10px; color: #94a3b8; font-weight: 500;">${pouring}</td>
         </tr>`;
       });
 
@@ -1916,13 +1925,6 @@
         if (activeStatusFilter !== null && filteredCages.length === 0) return;
 
         let segDetails = '';
-        if (segment.totalWeight || segment.totalVolume || segment.daysSincePouring) {
-            segDetails = `<div style="font-size: 12px; color: #94a3b8; font-weight: normal; display: flex; gap: 15px; margin-top: 6px;">`;
-            if (segment.totalWeight) segDetails += `<div>Общ. вес: <span style="color:#e2e8f0">${segment.totalWeight} т</span></div>`;
-            if (segment.totalVolume) segDetails += `<div>Объём: <span style="color:#e2e8f0">${segment.totalVolume} м³</span></div>`;
-            if (segment.daysSincePouring) segDetails += `<div>Заливка: <span style="color:#e2e8f0">${segment.daysSincePouring} дн. назад</span></div>`;
-            segDetails += `</div>`;
-        }
 
         let html = `
             <div class="segment-card" onclick="openModal(${index})">
