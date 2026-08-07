@@ -1901,6 +1901,7 @@
         let segWeight = seg.totalWeight ? `${seg.totalWeight}` : '-';
         let segVolume = seg.totalVolume ? `${seg.totalVolume}` : '-';
         let segPouring = seg.daysSincePouring ? `${seg.daysSincePouring}` : '-';
+        let rowSpanAttr = seg.cages.length > 1 ? ` rowspan="${seg.cages.length}"` : '';
 
         seg.cages.forEach((cage, index) => {
             const dDel = cage.dateDelivery ? cage.dateDelivery.split('T')[0].split(' ')[0] : '-';
@@ -1915,21 +1916,35 @@
             let isLast = index === seg.cages.length - 1;
             let borderStyle = isLast ? 'border-bottom: 2px solid #64748b;' : 'border-bottom: 1px solid #1e293b;';
 
-            tableRows += `<tr style="${borderStyle} background: ${rowColor}; transition: background 0.2s;" onmouseover="this.style.background='rgba(255, 255, 255, 0.1)'" onmouseout="this.style.background='${rowColor}'">
-                <td style="padding: 10px; color: #f8fafc; font-weight: 700;">${seg.name}</td>
-                <td style="padding: 10px; color: #cbd5e1; font-weight: 600;">${cage.id}</td>
-                <td style="padding: 10px; color: #94a3b8;">${cPipes}</td>
-                <td style="padding: 10px; color: #cbd5e1;">${cage.type}</td>
-                <td style="padding: 10px; color: #94a3b8;">${cWeight}</td>
-                <td style="padding: 10px; color: #94a3b8;">${dDel}</td>
-                <td style="padding: 10px; color: #94a3b8;">${dSta}</td>
-                <td style="padding: 10px; color: #94a3b8;">${dAss}</td>
-                <td style="padding: 10px; color: #94a3b8;">${dCom}</td>
-                <td style="padding: 10px; color: #94a3b8;">${dSub}</td>
-                <td style="padding: 10px; color: #94a3b8; font-weight: 600;">${segWeight}</td>
-                <td style="padding: 10px; color: #94a3b8; font-weight: 600;">${segVolume}</td>
-                <td style="padding: 10px; color: #94a3b8; font-weight: 600;">${segPouring}</td>
-            </tr>`;
+            if (index === 0) {
+                tableRows += `<tr style="${borderStyle} background: ${rowColor}; transition: background 0.2s;" onmouseover="this.style.background='rgba(255, 255, 255, 0.1)'" onmouseout="this.style.background='${rowColor}'">
+                    <td${rowSpanAttr} style="padding: 10px; color: #f8fafc; font-weight: 700; vertical-align: middle; border-right: 1px solid rgba(255,255,255,0.05);">${seg.name}</td>
+                    <td style="padding: 10px; color: #cbd5e1; font-weight: 600;">${cage.id}</td>
+                    <td style="padding: 10px; color: #94a3b8;">${cPipes}</td>
+                    <td style="padding: 10px; color: #cbd5e1;">${cage.type}</td>
+                    <td style="padding: 10px; color: #94a3b8;">${cWeight}</td>
+                    <td style="padding: 10px; color: #94a3b8;">${dDel}</td>
+                    <td style="padding: 10px; color: #94a3b8;">${dSta}</td>
+                    <td style="padding: 10px; color: #94a3b8;">${dAss}</td>
+                    <td style="padding: 10px; color: #94a3b8;">${dCom}</td>
+                    <td style="padding: 10px; color: #94a3b8;">${dSub}</td>
+                    <td${rowSpanAttr} style="padding: 10px; color: #94a3b8; font-weight: 600; vertical-align: middle; border-left: 1px solid rgba(255,255,255,0.05);">${segWeight}</td>
+                    <td${rowSpanAttr} style="padding: 10px; color: #94a3b8; font-weight: 600; vertical-align: middle;">${segVolume}</td>
+                    <td${rowSpanAttr} style="padding: 10px; color: #94a3b8; font-weight: 600; vertical-align: middle;">${segPouring}</td>
+                </tr>`;
+            } else {
+                tableRows += `<tr style="${borderStyle} background: ${rowColor}; transition: background 0.2s;" onmouseover="this.style.background='rgba(255, 255, 255, 0.1)'" onmouseout="this.style.background='${rowColor}'">
+                    <td style="padding: 10px; color: #cbd5e1; font-weight: 600;">${cage.id}</td>
+                    <td style="padding: 10px; color: #94a3b8;">${cPipes}</td>
+                    <td style="padding: 10px; color: #cbd5e1;">${cage.type}</td>
+                    <td style="padding: 10px; color: #94a3b8;">${cWeight}</td>
+                    <td style="padding: 10px; color: #94a3b8;">${dDel}</td>
+                    <td style="padding: 10px; color: #94a3b8;">${dSta}</td>
+                    <td style="padding: 10px; color: #94a3b8;">${dAss}</td>
+                    <td style="padding: 10px; color: #94a3b8;">${dCom}</td>
+                    <td style="padding: 10px; color: #94a3b8;">${dSub}</td>
+                </tr>`;
+            }
         });
       });
 
