@@ -1164,22 +1164,25 @@
 
         <div
           style="margin-top: 25px; background: rgba(30, 41, 59, 0.6); border-radius: 6px; border: 1px solid #334155; padding: 15px;">
-          <h3 data-i18n="summary_table"
-            style="margin-bottom: 15px; font-size: 14px; color: #94a3b8; font-weight: 600; text-transform: uppercase;">
-            Сводная таблица по захваткам</h3>
-          <div style="overflow-x: auto;">
-            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px;">
-              <thead>
+          <h3 style="margin-bottom: 15px; font-size: 14px; color: #94a3b8; font-weight: 600; text-transform: uppercase;">
+            Полная таблица данных</h3>
+          <div style="overflow-x: auto; max-height: 600px;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; white-space: nowrap;">
+              <thead style="position: sticky; top: 0; background: rgba(30, 41, 59, 0.95); z-index: 1;">
                 <tr style="border-bottom: 1px solid #334155; color: #94a3b8;">
-                  <th style="padding: 10px; font-weight: 600;" data-i18n="th_segment">Захватка</th>
-                  <th style="padding: 10px; font-weight: 600;" data-i18n="th_total">Всего</th>
-                  <th style="padding: 10px; font-weight: 600; color: #10b981;" data-i18n="legend_green">Завершен</th>
-                  <th style="padding: 10px; font-weight: 600; color: #38bdf8;" data-i18n="legend_blue">Готов к погружению</th>
-                  <th style="padding: 10px; font-weight: 600; color: #f59e0b;" data-i18n="legend_orange">В процессе сдачи</th>
-                  <th style="padding: 10px; font-weight: 600; color: #ef4444;" data-i18n="legend_red">Ожидает контроля</th>
-                  <th style="padding: 10px; font-weight: 600;" data-i18n="th_weight">Вес (т)</th>
-                  <th style="padding: 10px; font-weight: 600;" data-i18n="th_volume">Объём (м³)</th>
-                  <th style="padding: 10px; font-weight: 600;" data-i18n="th_concrete">Бетонирование</th>
+                  <th style="padding: 10px; font-weight: 600;">Номер захватки</th>
+                  <th style="padding: 10px; font-weight: 600;">ID</th>
+                  <th style="padding: 10px; font-weight: 600;">Тип</th>
+                  <th style="padding: 10px; font-weight: 600;">Вес (т)</th>
+                  <th style="padding: 10px; font-weight: 600;">Дата поставки</th>
+                  <th style="padding: 10px; font-weight: 600;">Дата начала</th>
+                  <th style="padding: 10px; font-weight: 600;">Дата сборки</th>
+                  <th style="padding: 10px; font-weight: 600;">Дата завершения</th>
+                  <th style="padding: 10px; font-weight: 600;">Дата погружения</th>
+                  <th style="padding: 10px; font-weight: 600;">Трубы</th>
+                  <th style="padding: 10px; font-weight: 600;">Общ. вес (т)</th>
+                  <th style="padding: 10px; font-weight: 600;">Общ. объём (м³)</th>
+                  <th style="padding: 10px; font-weight: 600;">Дней с заливки</th>
                 </tr>
               </thead>
               <tbody id="summary-tbody"></tbody>
@@ -1895,21 +1898,36 @@
             rowColor = 'rgba(239, 68, 68, 0.15)';
         }
 
-        let weight = seg.totalWeight ? `${seg.totalWeight}` : '-';
-        let volume = seg.totalVolume ? `${seg.totalVolume}` : '-';
-        let pouring = seg.daysSincePouring ? `${seg.daysSincePouring} дн. назад` : '-';
+        let segWeight = seg.totalWeight ? `${seg.totalWeight}` : '-';
+        let segVolume = seg.totalVolume ? `${seg.totalVolume}` : '-';
+        let segPouring = seg.daysSincePouring ? `${seg.daysSincePouring}` : '-';
 
-        tableRows += `<tr style="border-bottom: 1px solid #1e293b; background: ${rowColor}; transition: background 0.2s;" onmouseover="this.style.background='rgba(255, 255, 255, 0.1)'" onmouseout="this.style.background='${rowColor}'">
-            <td style="padding: 12px 10px; color: #f8fafc; font-weight: 700;">${seg.name}</td>
-            <td style="padding: 12px 10px; font-weight: 600; color: #cbd5e1;">${seg.cages.length}</td>
-            <td style="padding: 12px 10px; color: #10b981; font-weight: 600;">${sGreen}</td>
-            <td style="padding: 12px 10px; color: #38bdf8; font-weight: 600;">${sBlue}</td>
-            <td style="padding: 12px 10px; color: #f59e0b; font-weight: 600;">${sOrange}</td>
-            <td style="padding: 12px 10px; color: #ef4444; font-weight: 600;">${sRed}</td>
-            <td style="padding: 12px 10px; color: #94a3b8; font-weight: 500;">${weight}</td>
-            <td style="padding: 12px 10px; color: #94a3b8; font-weight: 500;">${volume}</td>
-            <td style="padding: 12px 10px; color: #94a3b8; font-weight: 500;">${pouring}</td>
-        </tr>`;
+        seg.cages.forEach(cage => {
+            const dDel = cage.dateDelivery ? cage.dateDelivery.split('T')[0].split(' ')[0] : '-';
+            const dSta = cage.dateStart ? cage.dateStart.split('T')[0].split(' ')[0] : '-';
+            const dAss = cage.dateAssembly ? cage.dateAssembly.split('T')[0].split(' ')[0] : '-';
+            const dCom = cage.dateCompletion ? cage.dateCompletion.split('T')[0].split(' ')[0] : '-';
+            const dSub = cage.dateSubmersion ? cage.dateSubmersion.split('T')[0].split(' ')[0] : '-';
+            
+            let cWeight = cage.weight ? `${cage.weight}` : '-';
+            let cPipes = cage.pipes ? `${cage.pipes}` : '-';
+
+            tableRows += `<tr style="border-bottom: 1px solid #1e293b; background: ${rowColor}; transition: background 0.2s;" onmouseover="this.style.background='rgba(255, 255, 255, 0.1)'" onmouseout="this.style.background='${rowColor}'">
+                <td style="padding: 10px; color: #f8fafc; font-weight: 700;">${seg.name}</td>
+                <td style="padding: 10px; color: #cbd5e1; font-weight: 600;">${cage.id}</td>
+                <td style="padding: 10px; color: #cbd5e1;">${cage.type}</td>
+                <td style="padding: 10px; color: #94a3b8;">${cWeight}</td>
+                <td style="padding: 10px; color: #94a3b8;">${dDel}</td>
+                <td style="padding: 10px; color: #94a3b8;">${dSta}</td>
+                <td style="padding: 10px; color: #94a3b8;">${dAss}</td>
+                <td style="padding: 10px; color: #94a3b8;">${dCom}</td>
+                <td style="padding: 10px; color: #94a3b8;">${dSub}</td>
+                <td style="padding: 10px; color: #94a3b8;">${cPipes}</td>
+                <td style="padding: 10px; color: #94a3b8; font-weight: 600;">${segWeight}</td>
+                <td style="padding: 10px; color: #94a3b8; font-weight: 600;">${segVolume}</td>
+                <td style="padding: 10px; color: #94a3b8; font-weight: 600;">${segPouring}</td>
+            </tr>`;
+        });
       });
 
       document.getElementById('kpi-board').innerHTML = `
