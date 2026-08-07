@@ -1167,8 +1167,14 @@
           <h3 style="margin-bottom: 15px; font-size: 14px; color: #94a3b8; font-weight: 600; text-transform: uppercase;">
             Полная таблица данных</h3>
           <div style="overflow-x: auto; max-height: 600px;">
-            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; white-space: nowrap;">
+            <table id="summary-table" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; white-space: nowrap;">
               <thead style="position: sticky; top: 0; background: rgba(30, 41, 59, 0.95); z-index: 1;">
+                <tr style="border-bottom: 2px solid #fbbf24; color: #fbbf24; background: rgba(251, 191, 36, 0.1);">
+                  <th colspan="10" style="text-align: right; padding: 10px; font-weight: 700; text-transform: uppercase;" data-i18n="table_total">Тотал / Total</th>
+                  <th id="total-weight-cell" style="padding: 10px; font-weight: 700;">0</th>
+                  <th id="total-volume-cell" style="padding: 10px; font-weight: 700;">0</th>
+                  <th></th>
+                </tr>
                 <tr style="border-bottom: 1px solid #334155; color: #94a3b8;">
                   <th style="padding: 10px; font-weight: 600;">Номер захватки</th>
                   <th style="padding: 10px; font-weight: 600;">ID</th>
@@ -1185,7 +1191,6 @@
                   <th style="padding: 10px; font-weight: 600;">Дней с заливки</th>
                 </tr>
               </thead>
-              <tbody id="summary-tbody"></tbody>
             </table>
           </div>
         </div>
@@ -1543,7 +1548,7 @@
         logout: "ВЫХОД", tab_analytics: "АНАЛИТИКА", tab_map: "КАРТА ПРОЕКТА", tab_details: "ОБЪЕКТЫ (ЗАХВАТКИ)",
         profile_title: "Личный кабинет", prof_fio: "ФИО Сотрудника", prof_email: "E-mail", prof_company: "Компания", prof_role: "Должность",
         change_pass_title: "Безопасность (Смена пароля)", save_pass_btn: "ОБНОВИТЬ ПАРОЛЬ", pass_match_err: "Новые пароли не совпадают!", pass_changed_ok: "Пароль успешно обновлен!",
-        chart_status: "Распределение статусов", chart_type: "Номенклатура",
+        chart_status: "Распределение статусов", chart_type: "Номенклатура", table_total: "ИТОГО:",
         legend_red: "Ожидает контроля", legend_orange: "В процессе сдачи", legend_blue: "Готов к погружению", legend_green: "Завершен", legend_gray: "В плане",
         legend_gray_cage: "Ожидается поставка",
         stage_names: ["Входной контроль", "Сдача", "Ожидание", "Погружение"],
@@ -1870,9 +1875,20 @@
       let typesCount = { 'КП-1': 0, 'КП-2': 0, 'КП-3': 0 };
 
       let tableRows = '';
+      let totalWeightSum = 0;
+      let totalVolumeSum = 0;
 
       segmentsData.forEach(seg => {
         let sGreen = 0, sBlue = 0, sOrange = 0, sRed = 0;
+
+        if (seg.totalWeight) {
+            let w = parseFloat(String(seg.totalWeight).replace(',', '.'));
+            if (!isNaN(w)) totalWeightSum += w;
+        }
+        if (seg.totalVolume) {
+            let v = parseFloat(String(seg.totalVolume).replace(',', '.'));
+            if (!isNaN(v)) totalVolumeSum += v;
+        }
 
         seg.cages.forEach(cage => {
           if (cage.type) typesCount[cage.type] = (typesCount[cage.type] || 0) + 1;
@@ -1903,6 +1919,8 @@
         let segPouring = seg.daysSincePouring ? `${seg.daysSincePouring}` : '-';
         let rowSpanAttr = seg.cages.length > 1 ? ` rowspan="${seg.cages.length}"` : '';
 
+        tableRows += `<tbody style="border-bottom: 2px solid #64748b; background: ${rowColor}; transition: background 0.2s;" onmouseover="this.style.background='rgba(255, 255, 255, 0.1)'" onmouseout="this.style.background='${rowColor}'">`;
+
         seg.cages.forEach((cage, index) => {
             const dDel = cage.dateDelivery ? cage.dateDelivery.split('T')[0].split(' ')[0] : '-';
             const dSta = cage.dateStart ? cage.dateStart.split('T')[0].split(' ')[0] : '-';
@@ -1914,10 +1932,10 @@
             let cPipes = cage.pipes ? `${cage.pipes}` : '-';
 
             let isLast = index === seg.cages.length - 1;
-            let borderStyle = isLast ? 'border-bottom: 2px solid #64748b;' : 'border-bottom: 1px solid #1e293b;';
+            let borderStyle = isLast ? 'border-bottom: none;' : 'border-bottom: 1px solid rgba(255,255,255,0.05);';
 
             if (index === 0) {
-                tableRows += `<tr style="${borderStyle} background: ${rowColor}; transition: background 0.2s;" onmouseover="this.style.background='rgba(255, 255, 255, 0.1)'" onmouseout="this.style.background='${rowColor}'">
+                tableRows += `<tr style="${borderStyle}">
                     <td${rowSpanAttr} style="padding: 10px; color: #f8fafc; font-weight: 700; vertical-align: middle; border-right: 1px solid rgba(255,255,255,0.05);">${seg.name}</td>
                     <td style="padding: 10px; color: #cbd5e1; font-weight: 600;">${cage.id}</td>
                     <td style="padding: 10px; color: #94a3b8;">${cPipes}</td>
@@ -1933,7 +1951,7 @@
                     <td${rowSpanAttr} style="padding: 10px; color: #94a3b8; font-weight: 600; vertical-align: middle;">${segPouring}</td>
                 </tr>`;
             } else {
-                tableRows += `<tr style="${borderStyle} background: ${rowColor}; transition: background 0.2s;" onmouseover="this.style.background='rgba(255, 255, 255, 0.1)'" onmouseout="this.style.background='${rowColor}'">
+                tableRows += `<tr style="${borderStyle}">
                     <td style="padding: 10px; color: #cbd5e1; font-weight: 600;">${cage.id}</td>
                     <td style="padding: 10px; color: #94a3b8;">${cPipes}</td>
                     <td style="padding: 10px; color: #cbd5e1;">${cage.type}</td>
@@ -1946,6 +1964,7 @@
                 </tr>`;
             }
         });
+        tableRows += `</tbody>`;
       });
 
       document.getElementById('kpi-board').innerHTML = `
@@ -1956,7 +1975,15 @@
       `;
 
       updateCharts(counts, typesCount);
-      document.getElementById('summary-tbody').innerHTML = tableRows;
+      
+      const summaryTable = document.getElementById('summary-table');
+      Array.from(summaryTable.querySelectorAll('tbody')).forEach(tb => tb.remove());
+      summaryTable.insertAdjacentHTML('beforeend', tableRows);
+      
+      if (document.getElementById('total-weight-cell')) {
+          document.getElementById('total-weight-cell').innerText = totalWeightSum.toFixed(2).replace('.', ',');
+          document.getElementById('total-volume-cell').innerText = totalVolumeSum.toFixed(2).replace('.', ',');
+      }
 
       renderMap();
 
