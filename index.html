@@ -1092,8 +1092,8 @@
           <img src="1.Kasktas Logo Horizontal Blue.jpg" alt="Kasktaş">
         </a>
         <div class="title-block">
-          <h1 data-i18n="title">Мониторинг Каркасов</h1>
-          <div class="subtitle" data-i18n="subtitle">Стена в грунте • Информационная панель управления</div>
+          <h1 data-i18n="title">Мониторинг Стена в Грунте</h1>
+          <div class="subtitle" data-i18n="subtitle">Проект Лахта-2/3</div>
         </div>
       </div>
 
@@ -1136,7 +1136,8 @@
 
 
     <div class="project-tabs" id="project-tabs">
-      <div class="project-tab active" onclick="switchProject('Энергоцентр', event)" data-i18n="proj_energy">ЭНЕРГОЦЕНТР</div>
+      <div class="project-tab active" onclick="switchProject('Энергоцентр', event)" data-i18n="proj_energy">ЭНЕРГОЦЕНТР
+      </div>
       <div class="project-tab" onclick="switchProject('Лахта 2', event)" data-i18n="proj_lahta2">ЛАХТА-2</div>
       <div class="project-tab" onclick="switchProject('Лахта 3', event)" data-i18n="proj_lahta3">ЛАХТА-3</div>
       <div class="project-tab" onclick="switchProject('Коффердам', event)" data-i18n="proj_cofferdam">КОФФЕРДАМ</div>
@@ -1164,13 +1165,17 @@
 
         <div
           style="margin-top: 25px; background: rgba(30, 41, 59, 0.6); border-radius: 6px; border: 1px solid #334155; padding: 15px;">
-          <h3 style="margin-bottom: 15px; font-size: 14px; color: #94a3b8; font-weight: 600; text-transform: uppercase;" data-i18n="full_table_title">
+          <h3 style="margin-bottom: 15px; font-size: 14px; color: #94a3b8; font-weight: 600; text-transform: uppercase;"
+            data-i18n="full_table_title">
             Полная таблица данных</h3>
           <div style="overflow-x: auto; max-height: 600px;">
-            <table id="summary-table" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; white-space: nowrap;">
+            <table id="summary-table"
+              style="width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; white-space: nowrap;">
               <thead style="position: sticky; top: 0; background: rgba(30, 41, 59, 0.95); z-index: 1;">
                 <tr style="border-bottom: 2px solid #fbbf24; color: #fbbf24; background: rgba(251, 191, 36, 0.1);">
-                  <th colspan="10" style="text-align: right; padding: 10px; font-weight: 700; text-transform: uppercase;" data-i18n="table_total">Тотал / Total</th>
+                  <th colspan="10"
+                    style="text-align: right; padding: 10px; font-weight: 700; text-transform: uppercase;"
+                    data-i18n="table_total">Тотал / Total</th>
                   <th id="total-weight-cell" style="padding: 10px; font-weight: 700;">0</th>
                   <th id="total-volume-cell" style="padding: 10px; font-weight: 700;">0</th>
                   <th></th>
@@ -1185,7 +1190,7 @@
                   <th style="padding: 10px; font-weight: 600;" data-i18n="col_date_start">Дата начала</th>
                   <th style="padding: 10px; font-weight: 600;" data-i18n="col_date_assem">Дата сборки</th>
                   <th style="padding: 10px; font-weight: 600;" data-i18n="col_date_comp">Дата завершения</th>
-                  <th style="padding: 10px; font-weight: 600;" data-i18n="col_date_sub">Дата погружения</th>
+                  <th style="padding: 10px; font-weight: 600;" data-i18n="col_date_sub">Дата заливки бетона</th>
                   <th style="padding: 10px; font-weight: 600;" data-i18n="col_tot_weight">Общ. вес (т)</th>
                   <th style="padding: 10px; font-weight: 600;" data-i18n="col_tot_vol">Общ. объём (м³)</th>
                   <th style="padding: 10px; font-weight: 600;" data-i18n="col_days_pour">Дней с заливки</th>
@@ -1328,8 +1333,10 @@
       </div>
 
     </div>
-    
-    <div style="text-align: center; margin-top: 40px; margin-bottom: 20px; font-size: 12px; color: #475569; letter-spacing: 1px; font-weight: 600;" data-i18n="dev">
+
+    <div
+      style="text-align: center; margin-top: 40px; margin-bottom: 20px; font-size: 12px; color: #475569; letter-spacing: 1px; font-weight: 600;"
+      data-i18n="dev">
       DEVELOPER: Damir Kunarov
     </div>
   </div>
@@ -1547,7 +1554,7 @@
 
     const i18n = {
       ru: {
-        title: "Мониторинг Каркасов", subtitle: "Стена в грунте • Информационная панель управления", dev: "DEVELOPER: Damir Kunarov",
+        title: "Мониторинг Стена в Грунте", subtitle: "Проект Лахта-2/3", dev: "DEVELOPER: Damir Kunarov",
         auth_title: "Авторизация", auth_subtitle: "Панель управления СВГ", auth_error: "Неверный логин или пароль", auth_btn: "Войти", auth_btn_checking: "ПРОВЕРКА...",
         logout: "ВЫХОД", tab_analytics: "АНАЛИТИКА", tab_map: "ПЛАН СВГ", tab_details: "ОБЪЕКТЫ (ЗАХВАТКИ)",
         profile_title: "Личный кабинет", prof_fio: "ФИО Сотрудника", prof_email: "E-mail", prof_company: "Компания", prof_role: "Должность",
@@ -1564,10 +1571,10 @@
         time_err: "Ошибка дат", no_data: "Нет данных", d: "д", h: "ч", m: "м",
         summary_table: "Сводная таблица по захваткам", th_segment: "Захватка", th_total: "Всего", th_green: "Завершено", th_blue: "К погружению", th_orange: "Сдача", th_red: "Контроль", th_weight: "Вес (т)", th_volume: "Объём (м³)", th_concrete: "Бетонирование",
         proj_energy: "ЭНЕРГОЦЕНТР", proj_lahta2: "ЛАХТА-2", proj_lahta3: "ЛАХТА-3", proj_cofferdam: "КОФФЕРДАМ",
-        full_table_title: "Полная таблица данных", col_segment_num: "Номер захватки", col_id: "ID", col_pipes: "Трубы", col_type: "Тип", col_weight: "Вес (т)", col_date_deliv: "Дата поставки", col_date_start: "Дата начала", col_date_assem: "Дата сборки", col_date_comp: "Дата завершения", col_date_sub: "Дата погружения", col_tot_weight: "Общ. вес (т)", col_tot_vol: "Общ. объём (м³)", col_days_pour: "Дней с заливки"
+        full_table_title: "Полная таблица данных", col_segment_num: "Номер захватки", col_id: "ID", col_pipes: "Трубы", col_type: "Тип", col_weight: "Вес (т)", col_date_deliv: "Дата поставки", col_date_start: "Дата начала", col_date_assem: "Дата сборки", col_date_comp: "Дата завершения", col_date_sub: "Дата заливки бетона", col_tot_weight: "Общ. вес (т)", col_tot_vol: "Общ. объём (м³)", col_days_pour: "Дней с заливки"
       },
       en: {
-        title: "Cage Monitoring", subtitle: "Diaphragm Wall • Dashboard", dev: "DEVELOPER: Damir Kunarov",
+        title: "Diaphragm Wall Monitoring", subtitle: "Lakhta-2/3 Project", dev: "DEVELOPER: Damir Kunarov",
         auth_title: "Authorization", auth_subtitle: "D-Wall Control Panel", auth_error: "Invalid login or password", auth_btn: "Login", auth_btn_checking: "CHECKING...",
         logout: "LOGOUT", tab_analytics: "ANALYTICS", tab_map: "D-WALL PLAN", tab_details: "OBJECTS (PANELS)",
         profile_title: "Personal Account", prof_fio: "Full Name", prof_email: "E-mail", prof_company: "Company", prof_role: "Position",
@@ -1584,10 +1591,10 @@
         time_err: "Date error", no_data: "No data", d: "d", h: "h", m: "m",
         summary_table: "Segment Summary Table", th_segment: "Segment", th_total: "Total", th_green: "Completed", th_blue: "Ready", th_orange: "Handover", th_red: "Inspection", th_weight: "Weight (t)", th_volume: "Volume (m³)", th_concrete: "Concrete",
         proj_energy: "ENERGY CENTER", proj_lahta2: "LAKHTA-2", proj_lahta3: "LAKHTA-3", proj_cofferdam: "COFFERDAM",
-        full_table_title: "Full Data Table", col_segment_num: "Segment No", col_id: "ID", col_pipes: "Pipes", col_type: "Type", col_weight: "Weight (t)", col_date_deliv: "Delivery Date", col_date_start: "Start Date", col_date_assem: "Assembly Date", col_date_comp: "Completion Date", col_date_sub: "Submersion Date", col_tot_weight: "Tot. Weight (t)", col_tot_vol: "Tot. Volume (m³)", col_days_pour: "Days since Pouring"
+        full_table_title: "Full Data Table", col_segment_num: "Segment No", col_id: "ID", col_pipes: "Pipes", col_type: "Type", col_weight: "Weight (t)", col_date_deliv: "Delivery Date", col_date_start: "Start Date", col_date_assem: "Assembly Date", col_date_comp: "Completion Date", col_date_sub: "Concrete Pouring Date", col_tot_weight: "Tot. Weight (t)", col_tot_vol: "Tot. Volume (m³)", col_days_pour: "Days since Pouring"
       },
       tr: {
-        title: "Kafes İzleme", subtitle: "Diyafram Duvar • Kontrol Paneli", dev: "GELİŞTİRİCİ: Damir Kunarov",
+        title: "Diyafram Duvar İzleme", subtitle: "Lakhta-2/3 Projesi", dev: "GELİŞTİRİCİ: Damir Kunarov",
         auth_title: "Giriş", auth_subtitle: "Diyafram Duvar Kontrol Paneli", auth_error: "Geçersiz kullanıcı adı veya şifre", auth_btn: "Giriş", auth_btn_checking: "KONTROL EDİLİYOR...",
         logout: "ÇIKIŞ", tab_analytics: "ANALİZ", tab_map: "D-DUVAR PLANI", tab_details: "NESNELER (PANELLER)",
         profile_title: "Kişisel Hesap", prof_fio: "Adı Soyadı", prof_email: "E-mail", prof_company: "Firma / Şirket", prof_role: "Görevi",
@@ -1603,8 +1610,8 @@
         sync: "Senkronize ediliyor...", sync_ok: "SYNC:", sync_err: "BAĞLANTI HATASI", no_url: "HATA: URL YOK",
         time_err: "Tarih hatası", no_data: "Veri yok", d: "g", h: "s", m: "d",
         summary_table: "Panel Özet Tablosu", th_segment: "Panel", th_total: "Toplam", th_green: "Tamamlandı", th_blue: "Hazır", th_orange: "Teslim", th_red: "Kontrol", th_weight: "Ağırlık (t)", th_volume: "Hacim (m³)", th_concrete: "Betonlama",
-        proj_energy: "ENERJİ MERKEZİ", proj_lahta2: "LAKHTA-2", proj_lahta3: "LAKHTA-3", proj_cofferdam: "KOFERDAM",
-        full_table_title: "Tam Veri Tablosu", col_segment_num: "Panel No", col_id: "ID", col_pipes: "Borular", col_type: "Tip", col_weight: "Ağırlık (t)", col_date_deliv: "Teslimat Tarihi", col_date_start: "Başlangıç Tarihi", col_date_assem: "Montaj Tarihi", col_date_comp: "Bitiş Tarihi", col_date_sub: "Daldırma Tarihi", col_tot_weight: "Top. Ağırlık (t)", col_tot_vol: "Top. Hacim (m³)", col_days_pour: "Dökümden Sonraki Gün"
+        proj_energy: "ENERJİ MERKEZİ", proj_lahta2: "LAKHTA-2", proj_lahta3: "LAKHTA-3", proj_cofferdam: "BATARDO",
+        full_table_title: "Tam Veri Tablosu", col_segment_num: "Panel No", col_id: "ID", col_pipes: "Borular", col_type: "Tip", col_weight: "Ağırlık (t)", col_date_deliv: "Teslimat Tarihi", col_date_start: "Başlangıç Tarihi", col_date_assem: "Montaj Tarihi", col_date_comp: "Bitiş Tarihi", col_date_sub: "Beton Döküm Tarihi", col_tot_weight: "Top. Ağırlık (t)", col_tot_vol: "Top. Hacim (m³)", col_days_pour: "Dökümden Sonraki Gün"
       }
     };
 
@@ -1623,6 +1630,14 @@
         else el.innerText = t(el.getAttribute('data-i18n'));
       });
       if (segmentsData && segmentsData.length > 0) renderDashboard();
+    }
+
+    function calculateStage(cage) {
+      if (cage.dateSubmersion && cage.dateSubmersion !== '-') return 4;
+      if (cage.dateCompletion && cage.dateCompletion !== '-') return 3;
+      if ((cage.dateAssembly && cage.dateAssembly !== '-') || (cage.dateStart && cage.dateStart !== '-')) return 2;
+      if (cage.dateDelivery && cage.dateDelivery !== '-') return 1;
+      return 0;
     }
 
     function getCageStatusData(stage) {
@@ -1707,7 +1722,7 @@
       let cagesToDisplay = segment.cages;
       if (activeStatusFilter !== null) {
         cagesToDisplay = segment.cages.filter(c => {
-          let st = c.currentStage !== undefined ? c.currentStage : 0;
+          let st = calculateStage(c);
           if (st > 4) st = 4;
           return st === activeStatusFilter;
         });
@@ -1715,15 +1730,15 @@
 
       let cagesHtml = '';
       cagesToDisplay.forEach(cage => {
-        const timeStr = cage.currentStage === 0 ? "---" : formatTimeDiff(cage.startTime, cage.endTime);
-        const normalizedStage = cage.currentStage !== undefined ? cage.currentStage : 0;
+        const timeStr = calculateStage(cage) === 0 ? "---" : formatTimeDiff(cage.startTime, cage.endTime);
+        const normalizedStage = calculateStage(cage);
         const statusData = getCageStatusData(normalizedStage);
 
         let blinkerHtml = normalizedStage > 0 && normalizedStage < 4
           ? `<div class="status-dot-blinking" style="width: 8px; height: 8px; background: ${statusData.color}; color: ${statusData.color};"></div>`
           : `<div style="width: 8px; height: 8px; background: ${statusData.color}; border-radius: 50%;"></div>`;
 
-        let displayId = cage.id ? '№' + cage.id : 'Б/Н';
+        let displayId = cage.id ? '№' + String(cage.id).replace(/№/g, '').trim() : 'Б/Н';
 
         let pipeInfoHtml = cage.pipeInfo ? `<span class="cage-type" style="background-color: #6366f1; color: #fff;">${cage.pipeInfo}</span>` : '';
 
@@ -1847,7 +1862,7 @@
           let minStage = 4;
 
           segment.cages.forEach(cage => {
-            let st = cage.currentStage !== undefined ? cage.currentStage : 0;
+            let st = calculateStage(cage);
             if (st > 0) {
               activeCages++;
               if (st < minStage) minStage = st;
@@ -1881,7 +1896,7 @@
 
     function renderDashboard() {
       const stageNames = t('stage_names');
-      let counts = { red: 0, orange: 0, blue: 0, teal: 0, green: 0 };
+      let counts = { red: 0, orange: 0, blue: 0, teal: 0, green: 0, gray: 0 };
       let typesCount = { 'КП-1': 0, 'КП-2': 0, 'КП-3': 0 };
 
       let tableRows = '';
@@ -1892,36 +1907,37 @@
         let sGreen = 0, sBlue = 0, sOrange = 0, sRed = 0;
 
         if (seg.totalWeight) {
-            let w = parseFloat(String(seg.totalWeight).replace(',', '.'));
-            if (!isNaN(w)) totalWeightSum += w;
+          let w = parseFloat(String(seg.totalWeight).replace(',', '.'));
+          if (!isNaN(w)) totalWeightSum += w;
         }
         if (seg.totalVolume) {
-            let v = parseFloat(String(seg.totalVolume).replace(',', '.'));
-            if (!isNaN(v)) totalVolumeSum += v;
+          let v = parseFloat(String(seg.totalVolume).replace(',', '.'));
+          if (!isNaN(v)) totalVolumeSum += v;
         }
 
         seg.cages.forEach(cage => {
           if (cage.type) typesCount[cage.type] = (typesCount[cage.type] || 0) + 1;
-          const st = cage.currentStage !== undefined ? cage.currentStage : 0;
+          const st = calculateStage(cage);
 
           if (st === 1) { counts.red++; sRed++; }
           else if (st === 2) { counts.orange++; sOrange++; }
           else if (st === 3) { counts.blue++; sBlue++; }
           else if (st >= 4) { counts.green++; sGreen++; }
+          else if (st === 0) { counts.gray++; }
         });
 
         let rowColor = 'transparent';
         if (seg.cages.length > 0) {
-            let totalActive = sGreen + sBlue + sOrange + sRed;
-            if (sGreen === seg.cages.length) {
-                rowColor = 'rgba(16, 185, 129, 0.15)';
-            } else if (totalActive > 0) {
-                rowColor = 'rgba(245, 158, 11, 0.15)';
-            } else {
-                rowColor = 'rgba(239, 68, 68, 0.15)';
-            }
-        } else {
+          let totalActive = sGreen + sBlue + sOrange + sRed;
+          if (sGreen === seg.cages.length) {
+            rowColor = 'rgba(16, 185, 129, 0.15)';
+          } else if (totalActive > 0) {
+            rowColor = 'rgba(245, 158, 11, 0.15)';
+          } else {
             rowColor = 'rgba(239, 68, 68, 0.15)';
+          }
+        } else {
+          rowColor = 'rgba(239, 68, 68, 0.15)';
         }
 
         let segWeight = seg.totalWeight ? `${seg.totalWeight}` : '-';
@@ -1932,20 +1948,20 @@
         tableRows += `<tbody style="border-bottom: 2px solid #64748b; background: ${rowColor}; transition: background 0.2s;" onmouseover="this.style.background='rgba(255, 255, 255, 0.1)'" onmouseout="this.style.background='${rowColor}'">`;
 
         seg.cages.forEach((cage, index) => {
-            const dDel = cage.dateDelivery ? cage.dateDelivery.split('T')[0].split(' ')[0] : '-';
-            const dSta = cage.dateStart ? cage.dateStart.split('T')[0].split(' ')[0] : '-';
-            const dAss = cage.dateAssembly ? cage.dateAssembly.split('T')[0].split(' ')[0] : '-';
-            const dCom = cage.dateCompletion ? cage.dateCompletion.split('T')[0].split(' ')[0] : '-';
-            const dSub = cage.dateSubmersion ? cage.dateSubmersion.split('T')[0].split(' ')[0] : '-';
-            
-            let cWeight = cage.weight ? `${cage.weight}` : '-';
-            let cPipes = cage.pipes ? `${cage.pipes}` : '-';
+          const dDel = cage.dateDelivery ? cage.dateDelivery.split('T')[0].split(' ')[0] : '-';
+          const dSta = cage.dateStart ? cage.dateStart.split('T')[0].split(' ')[0] : '-';
+          const dAss = cage.dateAssembly ? cage.dateAssembly.split('T')[0].split(' ')[0] : '-';
+          const dCom = cage.dateCompletion ? cage.dateCompletion.split('T')[0].split(' ')[0] : '-';
+          const dSub = cage.dateSubmersion ? cage.dateSubmersion.split('T')[0].split(' ')[0] : '-';
 
-            let isLast = index === seg.cages.length - 1;
-            let borderStyle = isLast ? 'border-bottom: none;' : 'border-bottom: 1px solid rgba(255,255,255,0.05);';
+          let cWeight = cage.weight ? `${cage.weight}` : '-';
+          let cPipes = cage.pipes ? `${cage.pipes}` : '-';
 
-            if (index === 0) {
-                tableRows += `<tr style="${borderStyle}">
+          let isLast = index === seg.cages.length - 1;
+          let borderStyle = isLast ? 'border-bottom: none;' : 'border-bottom: 1px solid rgba(255,255,255,0.05);';
+
+          if (index === 0) {
+            tableRows += `<tr style="${borderStyle}">
                     <td${rowSpanAttr} style="padding: 10px; color: #f8fafc; font-weight: 700; vertical-align: middle; border-right: 1px solid rgba(255,255,255,0.05);">${seg.name}</td>
                     <td style="padding: 10px; color: #cbd5e1; font-weight: 600;">${cage.id}</td>
                     <td style="padding: 10px; color: #94a3b8;">${cPipes}</td>
@@ -1960,8 +1976,8 @@
                     <td${rowSpanAttr} style="padding: 10px; color: #94a3b8; font-weight: 600; vertical-align: middle;">${segVolume}</td>
                     <td${rowSpanAttr} style="padding: 10px; color: #94a3b8; font-weight: 600; vertical-align: middle;">${segPouring}</td>
                 </tr>`;
-            } else {
-                tableRows += `<tr style="${borderStyle}">
+          } else {
+            tableRows += `<tr style="${borderStyle}">
                     <td style="padding: 10px; color: #cbd5e1; font-weight: 600;">${cage.id}</td>
                     <td style="padding: 10px; color: #94a3b8;">${cPipes}</td>
                     <td style="padding: 10px; color: #cbd5e1;">${cage.type}</td>
@@ -1972,7 +1988,7 @@
                     <td style="padding: 10px; color: #94a3b8;">${dCom}</td>
                     <td style="padding: 10px; color: #94a3b8;">${dSub}</td>
                 </tr>`;
-            }
+          }
         });
         tableRows += `</tbody>`;
       });
@@ -1982,17 +1998,18 @@
           <div class="stat-card" style="border-left-color: #38bdf8;"><div class="label">${t('legend_blue')}</div><div class="value">${counts.blue}</div></div>
           <div class="stat-card" style="border-left-color: #f59e0b;"><div class="label">${t('legend_orange')}</div><div class="value">${counts.orange}</div></div>
           <div class="stat-card" style="border-left-color: #ef4444;"><div class="label">${t('legend_red')}</div><div class="value">${counts.red}</div></div>
+          <div class="stat-card" style="border-left-color: #475569;"><div class="label">${t('legend_gray')}</div><div class="value">${counts.gray}</div></div>
       `;
 
       updateCharts(counts, typesCount);
-      
+
       const summaryTable = document.getElementById('summary-table');
       Array.from(summaryTable.querySelectorAll('tbody')).forEach(tb => tb.remove());
       summaryTable.insertAdjacentHTML('beforeend', tableRows);
-      
+
       if (document.getElementById('total-weight-cell')) {
-          document.getElementById('total-weight-cell').innerText = totalWeightSum.toFixed(2).replace('.', ',');
-          document.getElementById('total-volume-cell').innerText = totalVolumeSum.toFixed(2).replace('.', ',');
+        document.getElementById('total-weight-cell').innerText = totalWeightSum.toFixed(2).replace('.', ',');
+        document.getElementById('total-volume-cell').innerText = totalVolumeSum.toFixed(2).replace('.', ',');
       }
 
       renderMap();
@@ -2003,7 +2020,7 @@
         let filteredCages = segment.cages;
         if (activeStatusFilter !== null) {
           filteredCages = segment.cages.filter(c => {
-            let st = c.currentStage !== undefined ? c.currentStage : 0;
+            let st = calculateStage(c);
             if (st > 4) st = 4;
             return st === activeStatusFilter;
           });
@@ -2024,7 +2041,7 @@
                 </div>`;
 
         filteredCages.forEach(cage => {
-          let normalizedStage = cage.currentStage !== undefined ? cage.currentStage : 0;
+          let normalizedStage = calculateStage(cage);
           if (normalizedStage > 4) normalizedStage = 4;
           const statusData = getCageStatusData(normalizedStage);
           const progressWidth = normalizedStage > 0 ? ((normalizedStage - 1) / 3) * 100 : 0;
