@@ -1456,6 +1456,7 @@
     ];
 
     let currentMapCoordinates = mapCoordinates_EC;
+    let allDataCache = {};
     let segmentsData = [];
     let pieChartInstance = null;
     let barChartInstance = null;
@@ -1736,12 +1737,15 @@
       if (projectName === 'Лахта 2') {
         document.getElementById('map-image').src = 'Plan_L2.jpg';
         currentMapCoordinates = {};
+        activeSubProject = 'СВГ Л2';
       } else if (projectName === 'Лахта 3') {
         document.getElementById('map-image').src = 'Plan_L3.jpg';
         currentMapCoordinates = {};
+        activeSubProject = 'СВГ Л3';
       } else {
         document.getElementById('map-image').src = 'Plan.jpg';
         currentMapCoordinates = mapCoordinates_EC;
+        activeSubProject = 'Энергоцентр';
       }
       
       const tabs = document.querySelectorAll('.project-tab');
@@ -1762,6 +1766,9 @@
            btn.style.background = 'transparent';
         }
       }
+      
+      segmentsData = allDataCache[activeSubProject] || [];
+      renderDashboard();
       
       switchTab('analytics');
     }
@@ -1792,21 +1799,18 @@
          if (tabId === 'forshahta') newSub = 'Форшахта Л2';
          else if (tabId === 'cofferdam') newSub = 'Коффердам Л2';
          else if (tabId === 'map') newSub = 'СВГ Л2';
-         if (!newSub || !newSub.includes('Л2')) newSub = 'СВГ Л2'; // Дефолт для Лахта 2
       } else if (activeProject === 'Лахта 3') {
          if (tabId === 'forshahta') newSub = 'Форшахта Л3';
          else if (tabId === 'cofferdam') newSub = 'Коффердам Л3';
          else if (tabId === 'map') newSub = 'СВГ Л3';
-         if (!newSub || !newSub.includes('Л3')) newSub = 'СВГ Л3'; // Дефолт для Лахта 3
       } else {
          newSub = 'Энергоцентр';
       }
       
       if (activeSubProject !== newSub) {
          activeSubProject = newSub;
-         segmentsData = []; // Очищаем старые данные до загрузки новых
+         segmentsData = allDataCache[activeSubProject] || [];
          renderDashboard();
-         loadData();
       }
     
     }
@@ -2330,9 +2334,29 @@
           return;
         }
 
-        const url = `${GAS_URL}?action=getData&project=${encodeURIComponent(activeSubProject)}&_t=${new Date().getTime()}`;
+        const url = `${GAS_URL}?action=getAllData&_t=${new Date().getTime()}`;
         const response = await fetch(url);
-        segmentsData = await response.json();
+        
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+           const result = await response.json();
+           if (Array.isArray(result)) {
+              // Fallback for old Apps Script that only returned one project
+              allDataCache[activeSubProject] = result;
+           } else {
+              allDataCache = result;
+           }
+        } else {
+           // If the script returns "Неизвестная команда" (text) because it hasn't been updated yet
+           console.warn("Apps Script needs to be updated with getAllData action.");
+           // Fallback to fetching just the single active project
+           const fallbackUrl = `${GAS_URL}?action=getData&project=${encodeURIComponent(activeSubProject)}&_t=${new Date().getTime()}`;
+           const fallbackResponse = await fetch(fallbackUrl);
+           const fallbackResult = await fallbackResponse.json();
+           allDataCache[activeSubProject] = fallbackResult;
+        }
+
+        segmentsData = allDataCache[activeSubProject] || [];
         renderDashboard();
 
         const now = new Date();
