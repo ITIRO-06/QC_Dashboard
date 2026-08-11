@@ -1136,17 +1136,16 @@
 
 
     <div class="project-tabs" id="project-tabs">
-      <div class="project-tab active" onclick="switchProject('Энергоцентр', event)" data-i18n="proj_energy">ЭНЕРГОЦЕНТР
-      </div>
+      <div class="project-tab active" onclick="switchProject('Энергоцентр', event)" data-i18n="proj_energy">ЭНЕРГОЦЕНТР</div>
       <div class="project-tab" onclick="switchProject('Лахта 2', event)" data-i18n="proj_lahta2">ЛАХТА-2</div>
       <div class="project-tab" onclick="switchProject('Лахта 3', event)" data-i18n="proj_lahta3">ЛАХТА-3</div>
-      <div class="project-tab" onclick="switchProject('Коффердам', event)" data-i18n="proj_cofferdam">КОФФЕРДАМ</div>
     </div>
-    <div class="nav-tabs">
-      <div class="nav-tab active" onclick="switchTab('analytics', event)" data-i18n="tab_analytics">АНАЛИТИКА</div>
-      <div class="nav-tab" onclick="switchTab('map', event)" data-i18n="tab_map">КАРТА ПРОЕКТА</div>
-      <div class="nav-tab" onclick="switchTab('details', event)" data-i18n="tab_details">ОБЪЕКТЫ (ЗАХВАТКИ)</div>
-
+    <div class="nav-tabs" id="nav-tabs">
+      <div class="nav-tab active common-tab" onclick="switchTab('analytics', event)" data-i18n="tab_analytics">АНАЛИТИКА</div>
+      <div class="nav-tab common-tab" onclick="switchTab('map', event)" data-i18n="tab_map">КАРТА ПРОЕКТА</div>
+      <div class="nav-tab common-tab" onclick="switchTab('details', event)" data-i18n="tab_details">ОБЪЕКТЫ (ЗАХВАТКИ)</div>
+      <div class="nav-tab lahta-tab" style="display:none;" onclick="switchTab('forshahta', event)" data-i18n="tab_forshahta">ФОРШАХТА ПЛАН</div>
+      <div class="nav-tab lahta-tab" style="display:none;" onclick="switchTab('cofferdam', event)" data-i18n="tab_cofferdam">КОФФЕРДАМ</div>
     </div>
 
     <div class="content">
@@ -1274,7 +1273,68 @@
         <div class="grid-container" id="segments-grid"></div>
       </div>
 
+      <div id="forshahta" class="page">
+        <div class="legend-panel">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="width: 10px; height: 10px; background: #475569; border-radius: 50%;"></div>
+            <span data-i18n="legend_gray" style="font-size: 11px; color: #cbd5e1; font-weight: 600;">В плане / Нет данных</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div class="status-dot-blinking" style="width: 10px; height: 10px; background: #ef4444; color: #ef4444;"></div>
+            <span data-i18n="legend_red" style="font-size: 11px; color: #cbd5e1; font-weight: 600;"></span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div class="status-dot-blinking" style="width: 10px; height: 10px; background: #f59e0b; color: #f59e0b;"></div>
+            <span data-i18n="legend_orange" style="font-size: 11px; color: #cbd5e1; font-weight: 600;"></span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div class="status-dot-blinking" style="width: 10px; height: 10px; background: #38bdf8; color: #38bdf8;"></div>
+            <span data-i18n="legend_blue" style="font-size: 11px; color: #cbd5e1; font-weight: 600;"></span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div class="status-dot-blinking" style="width: 10px; height: 10px; background: #10b981; color: #10b981;"></div>
+            <span data-i18n="legend_green" style="font-size: 11px; color: #cbd5e1; font-weight: 600;"></span>
+          </div>
+        </div>
+        <div class="map-scroll-area">
+          <div class="map-inner" id="forshahta-map-container" style="position: relative;">
+            <img src="forshahta_plan.jpg" alt="План Форшахты" style="width: 100%; display: block; opacity: 1;">
+            <svg id="forshahta-svg-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none;" viewBox="0 0 1000 1000" preserveAspectRatio="none">
+              <!-- SVG polygons will be injected here -->
+            </svg>
+          </div>
+        </div>
+      </div>
 
+      <div id="cofferdam" class="page">
+        <div class="legend-panel">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="width: 10px; height: 10px; background: #475569; border-radius: 50%;"></div>
+            <span data-i18n="legend_gray" style="font-size: 11px; color: #cbd5e1; font-weight: 600;">В плане / Нет данных</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div class="status-dot-blinking" style="width: 10px; height: 10px; background: #ef4444; color: #ef4444;"></div>
+            <span data-i18n="legend_red" style="font-size: 11px; color: #cbd5e1; font-weight: 600;"></span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div class="status-dot-blinking" style="width: 10px; height: 10px; background: #f59e0b; color: #f59e0b;"></div>
+            <span data-i18n="legend_orange" style="font-size: 11px; color: #cbd5e1; font-weight: 600;"></span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div class="status-dot-blinking" style="width: 10px; height: 10px; background: #38bdf8; color: #38bdf8;"></div>
+            <span data-i18n="legend_blue" style="font-size: 11px; color: #cbd5e1; font-weight: 600;"></span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div class="status-dot-blinking" style="width: 10px; height: 10px; background: #10b981; color: #10b981;"></div>
+            <span data-i18n="legend_green" style="font-size: 11px; color: #cbd5e1; font-weight: 600;"></span>
+          </div>
+        </div>
+        <div class="map-scroll-area">
+          <div class="map-inner" id="cofferdam-map-container" style="position: relative;">
+            <div style="color: #cbd5e1; padding: 50px; text-align: center; font-size: 20px;">План Коффердама (в разработке)</div>
+          </div>
+        </div>
+      </div>
 
       <div id="profile" class="page">
         <div
@@ -1358,25 +1418,30 @@
 
     const mapCoordinates = {
       "ЭЦ1-КР3.1": { "x": "26.94", "y": "3.85" }, "ЭЦ7-КР3.1": { "x": "64.62", "y": "17.14" },
-      "ЭЦ2-КР3.5": { "x": "33.23", "y": "4.32" }, "ЭЦ6-КР3": { "x": "58.81", "y": "13.34" },
-      "ЭЦ3-КР3.5": { "x": "39.63", "y": "5.44" }, "ЭЦ5-КР3": { "x": "52.60", "y": "10.06" },
-      "ЭЦ8-КР3.5": { "x": "70.37", "y": "21.65" }, "ЭЦ4-КР3.2": { "x": "46.15", "y": "7.35" },
-      "ЭЦ15-КР4.1": { "x": "95.06", "y": "70.18" }, "ЭЦ9-КР3.5": { "x": "76.07", "y": "26.86" },
-      "ЭЦ10-КР1": { "x": "79.96", "y": "30.91" }, "ЭЦ11-КР3.2": { "x": "83.98", "y": "35.36" },
-      "ЭЦ12-КР3.3": { "x": "89.37", "y": "42.34" }, "ЭЦ13-КР10": { "x": "94.35", "y": "49.48" },
-      "ЭЦ14-КР15": { "x": "96.74", "y": "59.97" }, "ЭЦ16-КР1": { "x": "93.44", "y": "77.15" },
-      "ЭЦ17-КР4": { "x": "91.60", "y": "84.49" }, "ЭЦ18-КР14": { "x": "88.62", "y": "94.21" },
-      "ЭЦ19-КР13": { "x": "83.04", "y": "98.07" }, "ЭЦ20-КР2.5": { "x": "77.05", "y": "95.34" },
-      "ЭЦ21-КР2.4": { "x": "70.84", "y": "92.68" }, "ЭЦ22-КР2.3": { "x": "64.32", "y": "90.81" },
-      "ЭЦ23-КР2": { "x": "57.72", "y": "89.79" }, "ЭЦ24-КР2": { "x": "51.36", "y": "89.56" },
-      "ЭЦ25-КР2": { "x": "45.00", "y": "90.21" }, "ЭЦ26-КР2.2": { "x": "38.89", "y": "91.60" },
-      "ЭЦ27-КР2.1": { "x": "32.78", "y": "93.73" }, "ЭЦ28-КР12": { "x": "26.44", "y": "95.88" },
-      "ЭЦ29-КР11": { "x": "20.14", "y": "92.45" }, "ЭЦ30-КР4.2": { "x": "15.21", "y": "84.63" },
-      "ЭЦ31-КР4": { "x": "12.69", "y": "74.25" }, "ЭЦ32-КР5": { "x": "11.19", "y": "67.00" },
-      "ЭЦ33-КР4": { "x": "9.71", "y": "59.85" }, "ЭЦ34-КР4": { "x": "7.46", "y": "49.14" },
-      "ЭЦ35-КР1": { "x": "5.95", "y": "41.63" }, "ЭЦ36-КР9": { "x": "4.48", "y": "33.43" },
-      "ЭЦ37-КР8": { "x": "5.12", "y": "21.59" }, "ЭЦ38-КР7": { "x": "8.85", "y": "11.47" },
-      "ЭЦ39-КР6": { "x": "14.45", "y": "5.26" }, "ЭЦ40-КР3.4": { "x": "20.79", "y": "4.07" }
+      "ЭЦ2-КР3.5": { "x": "35.34", "y": "31.98" }, "ЭЦ6-КР3": { "x": "75.05", "y": "28.52" },
+      "ЭЦ3-КР3.5": { "x": "32.65", "y": "46.22" }, "ЭЦ5-КР3": { "x": "71.69", "y": "41.74" },
+      "ЭЦ8-КР3.5": { "x": "51.13", "y": "42.94" }, "ЭЦ4-КР3.2": { "x": "50.15", "y": "57.34" },
+      "ЭЦ15-КР4.1": { "x": "13.68", "y": "26.54" }, "ЭЦ9-КР3.5": { "x": "46.73", "y": "67.06" },
+      "ЭЦ14-КР15": { "x": "11.19", "y": "43.76" }, "ЭЦ16-КР1": { "x": "16.14", "y": "12.35" },
+      "ЭЦ10-КР1": { "x": "55.08", "y": "78.43" }, "ЭЦ13-КР10": { "x": "8.87", "y": "64.08" },
+      "ЭЦ17-КР4": { "x": "34.19", "y": "16.63" }, "ЭЦ12-КР3.3": { "x": "27.67", "y": "75.76" },
+      "ЭЦ18-КР14": { "x": "48.24", "y": "23.95" }, "ЭЦ11-КР3.2": { "x": "42.50", "y": "80.89" },
+      "ЭЦ26-КР2.2": { "x": "20.57", "y": "54.82" }, "ЭЦ19-КР13": { "x": "62.46", "y": "30.40" },
+      "ЭЦ25-КР2": { "x": "24.96", "y": "62.33" }, "ЭЦ20-КР2.5": { "x": "59.20", "y": "52.88" },
+      "ЭЦ24-КР2": { "x": "39.46", "y": "54.08" }, "ЭЦ21-КР2.4": { "x": "68.62", "y": "61.34" },
+      "ЭЦ23-КР2": { "x": "36.21", "y": "67.31" }, "ЭЦ27-КР2.1": { "x": "23.90", "y": "40.94" },
+      "ЭЦ22-КР2.3": { "x": "55.65", "y": "67.37" }, "ЭЦ32-КР5": { "x": "15.01", "y": "79.17" },
+      "ЭЦ28-КР12": { "x": "37.10", "y": "76.71" }, "ЭЦ33-КР4": { "x": "75.80", "y": "76.67" },
+      "ЭЦ31-КР4": { "x": "26.35", "y": "85.80" }, "ЭЦ40-КР3.4": { "x": "71.69", "y": "82.51" },
+      "ЭЦ30-КР4.2": { "x": "40.35", "y": "89.04" }, "ЭЦ39-КР6": { "x": "60.44", "y": "88.60" },
+      "ЭЦ34-КР4": { "x": "92.05", "y": "69.18" }, "ЭЦ38-КР7": { "x": "86.19", "y": "83.56" },
+      "ЭЦ35-КР1": { "x": "87.16", "y": "55.67" }, "ЭЦ37-КР8": { "x": "79.16", "y": "63.02" },
+      "ЭЦ29-КР11": { "x": "51.10", "y": "87.05" }, "ЭЦ36-КР9": { "x": "83.67", "y": "46.12" }
+    };
+    
+    // Placeholder coordinates for Forshahta polygons (x,y points). User can add real ones.
+    const forshahtaCoordinates = {
+      // Example: "ФШ-1": "100,100 200,100 200,200 100,200"
     };
 
     const segmentOrder = [
@@ -1394,6 +1459,7 @@
     let pieChartInstance = null;
     let barChartInstance = null;
     let activeProject = "Энергоцентр";
+    let activeSubProject = "Энергоцентр";
     let currentLang = 'ru';
     let panzoomInstance = null;
     let activeStatusFilter = null;
@@ -1656,12 +1722,34 @@
     function switchTab(tabId, ev) {
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
       document.querySelectorAll('.nav-tab').forEach(btn => btn.classList.remove('active'));
-      document.getElementById(tabId).classList.add('active');
+      
+      let targetPage = tabId;
+      const pageEl = document.getElementById(targetPage);
+      if (pageEl) pageEl.classList.add('active');
 
       if (ev && ev.target) {
         let targetBtn = ev.target.closest('.nav-tab');
         if (targetBtn) targetBtn.classList.add('active');
       }
+      
+      let newSub = activeProject;
+      if (activeProject === 'Лахта 2') {
+         if (tabId === 'forshahta') newSub = 'Форшахта Л2';
+         else if (tabId === 'cofferdam') newSub = 'Коффердам Л2';
+         else newSub = 'СВГ Л2';
+      } else if (activeProject === 'Лахта 3') {
+         if (tabId === 'forshahta') newSub = 'Форшахта Л3';
+         else if (tabId === 'cofferdam') newSub = 'Коффердам Л3';
+         else newSub = 'СВГ Л3';
+      } else {
+         newSub = 'Энергоцентр';
+      }
+      
+      if (activeSubProject !== newSub) {
+         activeSubProject = newSub;
+         loadData();
+      }
+    
     }
 
     function getColorForType(type) {
@@ -1777,10 +1865,10 @@
       pieChartInstance = new Chart(pieCtx, {
         type: 'doughnut',
         data: {
-          labels: [t('legend_green'), t('legend_blue'), t('legend_orange'), t('legend_red')],
+          labels: [t('legend_green'), t('legend_blue'), t('legend_orange'), t('legend_red'), t('legend_gray')],
           datasets: [{
-            data: [counts.green, counts.blue, counts.orange, counts.red],
-            backgroundColor: ['#10b981', '#38bdf8', '#f59e0b', '#ef4444'],
+            data: [counts.green, counts.blue, counts.orange, counts.red, counts.gray],
+            backgroundColor: ['#10b981', '#38bdf8', '#f59e0b', '#ef4444', '#475569'],
             borderWidth: 2, borderColor: '#0f172a', hoverOffset: 4
           }]
         },
@@ -1803,7 +1891,7 @@
     }
 
     // НОВАЯ ФУНКЦИЯ ДЛЯ БЕЗОПАСНЫХ КЛИКОВ НА ТЕЛЕФОНЕ
-    function bindPinEvents(pinElement, dataIndex) {
+    function bindPinEvents(pinElement, dataIndex, customClick) {
       let touchHandled = false;
 
       // Предотвращаем срабатывание panzoom
@@ -1816,7 +1904,7 @@
         e.stopPropagation();
         e.preventDefault(); // Предотвращаем ghost-click
         touchHandled = true;
-        openModal(dataIndex);
+        if (customClick) customClick(); else openModal(dataIndex);
         setTimeout(() => touchHandled = false, 300);
       }, { passive: false });
 
@@ -1824,10 +1912,71 @@
       pinElement.addEventListener('click', (e) => {
         e.stopPropagation();
         if (!touchHandled) {
-          openModal(dataIndex);
+          if (customClick) customClick(); else openModal(dataIndex);
         }
       });
     }
+
+    function renderForshahtaMap() {
+      const svgOverlay = document.getElementById('forshahta-svg-overlay');
+      if (!svgOverlay) return;
+      svgOverlay.innerHTML = ''; // Очистка
+
+      // Для каждого сегмента из данных рисуем полигон
+      segmentsData.forEach((segment, index) => {
+        const polyPoints = forshahtaCoordinates[segment.name];
+        if (!polyPoints) return; // Если нет координат, не рисуем
+
+        let activeCages = 0;
+        let minStage = 4;
+
+        segment.cages.forEach(cage => {
+          let st = calculateStage(cage);
+          if (st > 0) {
+            activeCages++;
+            if (st < minStage) minStage = st;
+          }
+        });
+
+        let color = 'rgba(71, 85, 105, 0.4)'; // По умолчанию серый полупрозрачный
+        let strokeColor = 'rgba(71, 85, 105, 0.8)';
+        
+        if (activeCages > 0) {
+          const statusData = getCageStatusData(minStage);
+          strokeColor = statusData.color;
+          color = statusData.color.replace('rgb', 'rgba').replace(')', ', 0.4)'); // Сделать полупрозрачным
+        }
+
+        const polygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+        polygon.setAttribute("points", polyPoints);
+        polygon.setAttribute("fill", color);
+        polygon.setAttribute("stroke", strokeColor);
+        polygon.setAttribute("stroke-width", "2");
+        polygon.style.pointerEvents = 'auto'; // чтобы можно было кликнуть
+        polygon.style.cursor = 'pointer';
+        polygon.style.transition = 'all 0.3s ease';
+        
+        // Ховер эффект
+        polygon.addEventListener('mouseenter', () => polygon.setAttribute("stroke-width", "4"));
+        polygon.addEventListener('mouseleave', () => polygon.setAttribute("stroke-width", "2"));
+
+        bindPinEvents(polygon, index);
+        svgOverlay.appendChild(polygon);
+      });
+    }
+
+    // Вспомогательная функция для сбора координат при клике по картинке Форшахты
+    document.addEventListener("DOMContentLoaded", () => {
+      const imgContainer = document.getElementById('forshahta-map-container');
+      if (imgContainer) {
+        imgContainer.addEventListener('click', (e) => {
+           const rect = imgContainer.getBoundingClientRect();
+           const x = (e.clientX - rect.left) / rect.width * 1000;
+           const y = (e.clientY - rect.top) / rect.height * 1000;
+           console.log(`Клик на картинке Форшахты: ${x.toFixed(1)},${y.toFixed(1)}`);
+        });
+      }
+    });
 
     function renderMap() {
       const mapContainer = document.getElementById('project-map-container');
@@ -2012,7 +2161,11 @@
         document.getElementById('total-volume-cell').innerText = totalVolumeSum.toFixed(2).replace('.', ',');
       }
 
-      renderMap();
+      if (activeSubProject.includes('Форшахта')) {
+        renderForshahtaMap();
+      } else {
+        renderMap();
+      }
 
       const grid = document.getElementById('segments-grid');
       grid.innerHTML = '';
@@ -2118,7 +2271,7 @@
           return;
         }
 
-        const url = `${GAS_URL}?action=getData&project=${encodeURIComponent(activeProject)}&_t=${new Date().getTime()}`;
+        const url = `${GAS_URL}?action=getData&project=${encodeURIComponent(activeSubProject)}&_t=${new Date().getTime()}`;
         const response = await fetch(url);
         segmentsData = await response.json();
         renderDashboard();
