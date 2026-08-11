@@ -1462,6 +1462,7 @@
     let activeSubProject = "Энергоцентр";
     let currentLang = 'ru';
     let panzoomInstance = null;
+    let forshahtaPanzoomInstance = null;
     let activeStatusFilter = null;
 
     function toggleFilter(stage) {
@@ -1523,7 +1524,17 @@
             zoomSpeed: 0.06,
             smoothScroll: true,
             beforeWheel: function (e) { return false; }
-            // onTouch убран, чтобы не ломать стандартное поведение на телефонах
+          });
+        }
+        
+        const forshahtaMap = document.getElementById('forshahta-map-container');
+        if (forshahtaMap && !forshahtaPanzoomInstance) {
+          forshahtaPanzoomInstance = panzoom(forshahtaMap, {
+            maxZoom: 5,
+            minZoom: 0.5,
+            zoomSpeed: 0.06,
+            smoothScroll: true,
+            beforeWheel: function (e) { return false; }
           });
         }
       }
@@ -1620,9 +1631,9 @@
 
     const i18n = {
       ru: {
-        title: "Мониторинг Стена в Грунте", subtitle: "Проект Лахта-2/3", dev: "DEVELOPER: Damir Kunarov",
+        title: "Мониторинг Стена в Грунте", subtitle: "Проект Лахта-2/3", dev: "РАЗРАБОТЧИК: Дамир Кунаров",
         auth_title: "Авторизация", auth_subtitle: "Панель управления СВГ", auth_error: "Неверный логин или пароль", auth_btn: "Войти", auth_btn_checking: "ПРОВЕРКА...",
-        logout: "ВЫХОД", tab_analytics: "АНАЛИТИКА", tab_map: "КАРТА ПРОЕКТА", tab_details: "ОБЪЕКТЫ (ЗАХВАТКИ)", tab_forshahta: "ФОРШАХТА ПЛАН", tab_cofferdam: "КОФФЕРДАМ",
+        logout: "ВЫХОД", tab_analytics: "АНАЛИТИКА", tab_map: "ПЛАН СВГ", tab_details: "ОБЪЕКТЫ (ЗАХВАТКИ)", tab_forshahta: "ФОРШАХТА ПЛАН", tab_cofferdam: "КОФФЕРДАМ",
         profile_title: "Личный кабинет", prof_fio: "ФИО Сотрудника", prof_email: "E-mail", prof_company: "Компания", prof_role: "Должность",
         change_pass_title: "Безопасность (Смена пароля)", save_pass_btn: "ОБНОВИТЬ ПАРОЛЬ", pass_match_err: "Новые пароли не совпадают!", pass_changed_ok: "Пароль успешно обновлен!",
         chart_status: "Распределение статусов", chart_type: "Номенклатура", table_total: "ИТОГО:",
@@ -1756,15 +1767,18 @@
         if (targetBtn) targetBtn.classList.add('active');
       }
       
-      let newSub = activeProject;
+      let newSub = activeSubProject; // По умолчанию сохраняем текущий подпроект (чтобы Аналитика и Таблица показывали данные текущего раздела)
+      
       if (activeProject === 'Лахта 2') {
          if (tabId === 'forshahta') newSub = 'Форшахта Л2';
          else if (tabId === 'cofferdam') newSub = 'Коффердам Л2';
-         else newSub = 'СВГ Л2';
+         else if (tabId === 'map') newSub = 'СВГ Л2';
+         if (!newSub || !newSub.includes('Л2')) newSub = 'СВГ Л2'; // Дефолт для Лахта 2
       } else if (activeProject === 'Лахта 3') {
          if (tabId === 'forshahta') newSub = 'Форшахта Л3';
          else if (tabId === 'cofferdam') newSub = 'Коффердам Л3';
-         else newSub = 'СВГ Л3';
+         else if (tabId === 'map') newSub = 'СВГ Л3';
+         if (!newSub || !newSub.includes('Л3')) newSub = 'СВГ Л3'; // Дефолт для Лахта 3
       } else {
          newSub = 'Энергоцентр';
       }
